@@ -3,240 +3,451 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sudoku — 즐겨요 원페이지 | sudoku.enjoy-onepage.com</title>
-  <meta name="description" content="빠르고 깔끔한 스도쿠. 오프라인에서도 부드럽게, 해답 유일성 보장 생성기 탑재. 난이도별 퍼즐, 타이머, 오류 체크, 공유까지 한 페이지로!" />
-  <link rel="canonical" href="https://sudoku.enjoy-onepage.com/" />
-  <meta name="robots" content="index,follow" />
+  <title>Sudoku — 즐겨요 원페이지</title>
+  <meta name="description" content="깔끔한 원페이지 스도쿠. 유일해답 보장 생성기 탑재. 난이도별 퍼즐, 타이머, 오류 체크, 해답 보기, 공유까지!" />
   <meta name="theme-color" content="#38bdf8" />
-
-  <!-- Open Graph / Twitter -->
-  <meta property="og:locale" content="ko_KR" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Sudoku — 즐겨요 원페이지" />
-  <meta property="og:title" content="Sudoku — 원페이지 퍼즐" />
-  <meta property="og:description" content="난이도별 스도쿠를 한 페이지에서. 해답 유일성 보장, 가벼운 인터페이스." />
-  <meta property="og:url" content="https://sudoku.enjoy-onepage.com/" />
-  <meta property="og:image" content="/og-image.png" />
-  <meta property="og:image:alt" content="Sudoku one-page preview" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Sudoku — 원페이지 퍼즐" />
-  <meta name="twitter:description" content="난이도별 스도쿠를 한 페이지에서. 해답 유일성 보장, 가벼운 인터페이스." />
-  <meta name="twitter:image" content="/og-image.png" />
-
-  <!-- Icons -->
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2228289204702106" crossorigin="anonymous"></script>
-  <!-- Kakao SDK -->
-  <script src="https://developers.kakao.com/sdk/js/kakao.min.js" defer></script>
-
   <style>
     :root{
-      --bg:#f0f9ff;
-      --card:#ffffff;
+      --brand:#38bdf8;
+      --ink:#0f172a;
       --muted:#64748b;
-      --fg:#1e293b;
-      --accent:#38bdf8;
-      --danger:#ef4444;
-      --grid:#cbd5e1;
-      --grid-strong:#475569;
-      --cell:#f8fafc;
-      --hl:#eaf6ff;
-      --same:#fff1b9;
-      --sel:#bae6fd;
+      --bg:#f8fafc;
+      --card:#ffffff;
+      --grid:#1e293b;
+      --cell:#e2e8f0;
+      --accent:#a7f3d0;
+      --error:#fecaca;
+      --focus:#bae6fd;
+      --radius:16px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; color:var(--fg); background:var(--bg);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans KR, Apple SD Gothic Neo, Helvetica, Arial;
-      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-      writing-mode: horizontal-tb;
-    }
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR","Apple SD Gothic Neo",Arial}
     a{color:inherit}
-    .wrap{max-width:1100px; margin:0 auto; padding:24px;}
+    .container{max-width:980px;margin:0 auto;padding:16px}
+    /* header */
+    .header{background:var(--brand);color:#fff;border-radius:var(--radius);padding:18px}
+    .header h1{margin:0;font-size:1.6rem;line-height:1.2;font-weight:800}
+    .header-sub{margin-top:6px;color:#e0f2fe;font-size:.95rem}
+    .header-buttons{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+    .btn{
+      border:0;border-radius:999px;padding:10px 14px;font-weight:700;
+      background:#fff;color:#0369a1;box-shadow:0 1px 0 rgba(0,0,0,.06);cursor:pointer
+    }
+    .btn.secondary{background:#e2f3ff;color:#075985}
+    .btn.ghost{background:#ffffffd9}
+    .controls{
+      margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center
+    }
+    select, .btn.control{
+      border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;background:#fff;font-weight:600
+    }
+    .wrap{
+      display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px
+    }
+    .board-card, .info-card{
+      background:var(--card);border-radius:var(--radius);padding:12px;box-shadow:0 2px 10px rgba(2,6,23,.06)
+    }
+    /* board */
+    .board{
+      width:min(92vw,520px);aspect-ratio:1;margin:8px auto;border:3px solid var(--grid);border-radius:10px;display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);overflow:hidden;background:#fff
+    }
+    .cell{
+      border:1px solid #cbd5e1;display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:1.2rem;user-select:none
+    }
+    .cell.given{background:#f1f5f9;color:#0f172a}
+    .cell.editable{cursor:pointer}
+    .cell.selected{outline:3px solid var(--focus);z-index:2;position:relative}
+    .cell.same{background:#eaf6ff}
+    .cell.error{background:var(--error)}
+    /* thick box borders */
+    .cell[data-r="0"], .cell[data-r="3"], .cell[data-r="6"]{border-top:3px solid var(--grid)}
+    .cell[data-c="0"], .cell[data-c="3"], .cell[data-c="6"]{border-left:3px solid var(--grid)}
+    .cell[data-r="8"]{border-bottom:3px solid var(--grid)}
+    .cell[data-c="8"]{border-right:3px solid var(--grid)}
 
-    header{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px; border-radius:16px; background:#e0f2fe; border:1px solid #bae6fd;}
-    .brand{display:flex; gap:12px; align-items:center}
-    .logo{width:40px; height:40px; border-radius:12px; background:#38bdf8 url('/favicon.png') center/cover no-repeat; box-shadow:0 4px 12px rgba(56,189,248,.35)}
-    .title{display:flex; flex-direction:column}
-    .title h1{font-size:20px; margin:0; color:#0284c7; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .title p{margin:2px 0 0; color:var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    /* number pad */
+    .pad{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:520px;margin:10px auto 0}
+    .pad button{
+      padding:14px 0;border-radius:14px;border:1px solid #cbd5e1;background:#fff;font-weight:900;font-size:1.15rem;cursor:pointer
+    }
+    .pad button:active{transform:translateY(1px)}
+    .pad .erase{grid-column:span 2}
 
-    .share{display:flex; gap:8px; align-items:center}
-    .btn{border:1px solid #bae6fd; background:#f0f9ff; color:var(--fg); padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600; transition:.2s;}
-    .btn:hover{background:#bae6fd}
-    .btn.accent{background:var(--accent); color:white; border-color:transparent}
-    .btn{writing-mode: horizontal-tb !important; white-space:nowrap; word-break:keep-all;}
+    /* info */
+    .info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .tile{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center}
+    .tile .k{color:var(--muted);font-size:.9rem}
+    .tile .v{font-size:1.15rem;font-weight:900;margin-top:6px}
 
-    main{display:grid; grid-template-columns: 1fr; gap:16px; margin-top:16px}
-    .ad{display:flex; justify-content:center; align-items:center; background:#e0f2fe; border:1px dashed #bae6fd; border-radius:12px; padding:6px; min-height:0;}
-
-    .board-wrap{display:grid; grid-template-columns: 1fr 340px; gap:16px}
-    @media (max-width:980px){ .board-wrap{ grid-template-columns: 1fr; } }
-
-    .card{background:var(--card); border:1px solid #e2e8f0; border-radius:16px; padding:16px}
-    .controls{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px}
-    .controls .btn{height:36px}
-    select{height:36px; border-radius:10px; background:#f0f9ff; border:1px solid #bae6fd; padding:0 10px}
-
-    .grid{display:grid; grid-template-columns: repeat(9, 1fr); border:3px solid var(--grid-strong); border-radius:12px; overflow:hidden; width:clamp(320px, 92vw, 520px); margin:12px auto;}
-    .cell{position:relative; border:1px solid var(--grid);}
-    .cell::before{content:""; display:block; padding-bottom:100%;}
-    .cell input{position:absolute; inset:0; width:100%; height:100%; border:0; background:transparent; text-align:center; font-weight:700; font-size:clamp(16px, 3.5vw, 28px); color:var(--fg);}
-    .cell input:disabled{color:#0284c7}
-
-    .stats{display:grid; grid-template-columns:1fr 1fr; gap:8px}
-    .stat{background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px}
-    .stat h3{margin:0 0 6px; font-size:12px; color:var(--muted)}
-    .stat p{margin:0; font-size:18px; font-weight:800}
-
-    .keypad{display:none; grid-template-columns:repeat(10,1fr); gap:8px; margin-top:12px}
-    .keypad .btn{height:44px; font-size:16px; min-width:36px;}
-    @media (max-width:980px){ .keypad{display:grid;} }
-    @media (max-width:480px){ .share{flex-direction:column; align-items:flex-end; gap:6px;} }
-
-    footer{margin:24px 0 8px; color:var(--muted); font-size:12px; text-align:center}
-    .links{display:flex; justify-content:center; gap:12px; margin-top:6px}
-
-    .modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(2,6,23,.55); z-index:50}
-    .modal .box{background:#fff; border-radius:16px; padding:20px 18px; width:min(92vw,420px); box-shadow:0 20px 50px rgba(2,6,23,.25)}
-    .modal h2{margin:0 0 6px; font-size:20px; color:#0f172a}
-    .modal p{margin:0 0 12px; color:#334155}
-    .modal .row{display:flex; gap:8px; flex-wrap:wrap}
+    /* responsive */
+    @media (max-width: 600px){
+      html{font-size:18px}
+      .header h1{font-size:1.35rem}
+      .btn, select, .btn.control{font-size:1rem}
+      .pad button{font-size:1.25rem;padding:16px 0}
+      .info{grid-template-columns:repeat(2,1fr)}
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo"></div>
-        <div class="title">
-          <h1>Sudoku — 즐겨요 원페이지</h1>
-          <p>상큼하고 깔끔한 스도쿠 · 유일해 보장 생성기</p>
-        </div>
-      </div>
-      <div class="share">
-        <button class="btn" id="btnShare">공유</button>
-        <button class="btn" id="btnKakao">카카오톡 공유</button>
-        <a class="btn accent" href="/">홈</a>
+  <div class="container">
+    <header class="header">
+      <h1>Sudoku — 즐겨요 원페이지</h1>
+      <div class="header-sub">깔끔한 스도쿠 · 유일해답 보장 생성기 · 오프라인에서도 부드럽게</div>
+      <div class="header-buttons">
+        <button class="btn" id="btn-home" onclick="location.href='/'">홈</button>
+        <button class="btn secondary" id="btn-share">문제 공유하기</button>
+        <button class="btn ghost" id="btn-copy">URL 복사</button>
       </div>
     </header>
 
-    <!-- 상단 광고 -->
-    <div class="ad card">
-      <ins class="adsbygoogle" style="display:block"
-           data-ad-client="ca-pub-2228289204702106"
-           data-ad-slot="7464033680"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
-    </div>
+    <section class="controls">
+      <label for="difficulty" style="font-weight:700">난이도</label>
+      <select id="difficulty" title="난이도">
+        <option value="easy">쉬움</option>
+        <option value="normal" selected>보통</option>
+        <option value="hard">어려움</option>
+      </select>
+      <button class="btn control" id="btn-new">새 퍼즐</button>
+      <button class="btn control" id="btn-check">오류 체크</button>
+      <button class="btn control" id="btn-solve">해답 보기</button>
+      <button class="btn control" id="btn-reset">초기화</button>
+    </section>
 
-    <main>
-      <div class="board-wrap">
-        <section class="card">
-          <div class="controls">
-            <select id="level">
-              <option value="easy">쉬움</option>
-              <option value="medium">보통</option>
-              <option value="hard">어려움</option>
-            </select>
-            <button class="btn" id="btnNew">새 퍼즐</button>
-            <button class="btn" id="btnCheck">오류 체크</button>
-            <button class="btn" id="btnSolve">해답 보기</button>
-            <button class="btn" id="btnReset">초기화</button>
-            <button class="btn" id="btnNotes">연필 모드: 끔</button>
-          </div>
-
-          <!-- 본문 광고 -->
-          <div class="ad">
-            <ins class="adsbygoogle" style="display:block"
-                 data-ad-client="ca-pub-2228289204702106"
-                 data-ad-slot="6150952012"
-                 data-ad-format="rectangle"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
-          </div>
-
-          <div id="grid" class="grid"></div>
-
-          <div class="keypad">
-            <button class="btn" data-key="1">1</button>
-            <button class="btn" data-key="2">2</button>
-            <button class="btn" data-key="3">3</button>
-            <button class="btn" data-key="4">4</button>
-            <button class="btn" data-key="5">5</button>
-            <button class="btn" data-key="6">6</button>
-            <button class="btn" data-key="7">7</button>
-            <button class="btn" data-key="8">8</button>
-            <button class="btn" data-key="9">9</button>
-            <button class="btn" data-key="del">지우기</button>
-          </div>
-        </section>
-
-        <aside class="side">
-          <section class="card stats">
-            <div class="stat"><h3>난이도</h3><p id="statLevel">쉬움</p></div>
-            <div class="stat"><h3>타이머</h3><p id="statTimer">00:00</p></div>
-            <div class="stat"><h3>남은 칸</h3><p id="statEmpty">0</p></div>
-            <div class="stat"><h3>오류 수</h3><p id="statErrors">0</p></div>
-          </section>
-          <section class="card">
-            <h2 style="margin-top:0; font-size:16px">도움말</h2>
-            <p style="color:var(--muted); line-height:1.6">
-              같은 행, 같은 열, 같은 3×3 박스 안에는 1~9가 한 번씩만 들어갈 수 있어요.<br>
-              연필 모드를 켜면 후보 숫자를 메모할 수 있습니다.
-            </p>
-          </section>
-          <section class="card ad">
-            <ins class="adsbygoogle" style="display:block"
-                 data-ad-client="ca-pub-2228289204702106"
-                 data-ad-slot="3524788673"
-                 data-ad-format="rectangle"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
-          </section>
-        </aside>
+    <div class="wrap">
+      <div class="board-card">
+        <div id="board" class="board" aria-label="스도쿠 보드"></div>
+        <div id="pad" class="pad" aria-label="숫자 패드">
+          <!-- 1~9 + 지우기 -->
+        </div>
       </div>
-    </main>
 
-    <footer>
-      <div>© <span id="year"></span> sudoku.enjoy-onepage.com</div>
-      <div class="links">
-        <a href="#">개인정보 처리방침</a><span>·</span><a href="#">문의</a>
-      </div>
-    </footer>
-  </div>
-
-  <!-- 완료 모달 -->
-  <div id="winModal" class="modal">
-    <div class="box">
-      <h2>🎉 축하합니다!</h2>
-      <p id="winText">퍼즐을 완성했어요.</p>
-      <div class="row">
-        <button class="btn accent" id="btnAgain">다시 풀기</button>
-        <button class="btn" id="btnShareWin">공유</button>
-        <button class="btn" id="btnKakaoWin">카카오톡</button>
+      <div class="info-card">
+        <div class="info">
+          <div class="tile"><div class="k">난이도</div><div class="v" id="info-diff">보통</div></div>
+          <div class="tile"><div class="k">타이머</div><div class="v" id="info-time">00:00</div></div>
+          <div class="tile"><div class="k">남은 칸</div><div class="v" id="info-empty">0</div></div>
+          <div class="tile"><div class="k">오류 수</div><div class="v" id="info-errors">0</div></div>
+        </div>
       </div>
     </div>
+
+    <p style="color:var(--muted);margin-top:14px;text-align:center">
+      같은 행, 같은 열, 같은 3×3 상자에는 1~9가 한 번씩만 들어갑니다. 연필모드 없이도 숫자패드로 빠르게 입력할 수 있어요.
+    </p>
+
+    <p style="color:#94a3b8;text-align:center;margin:24px 0 8px">© 2025 sudoku.enjoy-onepage.com</p>
   </div>
 
-<script>
-  // Kakao init
-  window.addEventListener('DOMContentLoaded', () => {
-    try{ if(window.Kakao && !Kakao.isInitialized()) Kakao.init('b157f51afb710d60c8b6bec3dc9a2d1f'); }catch(e){}
-  });
+  <script>
+    /*************** 유틸 ***************/
+    const rand = (a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+    const shuffle = arr => {for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+    const deepCopy = b => b.map(r=>r.slice());
 
-  // ===== Sudoku Core =====
-  const rowIdx=i=>Math.floor(i/9), colIdx=i=>i%9, boxIdx=(r,c)=>Math.floor(r/3)*3+Math.floor(c/3);
-  const shuffle=a=>a.sort(()=>Math.random()-0.5);
-  function generateSolvedGrid(){ const g=new Array(81).fill(0); const r=Array.from({length:9},()=>new Set()), c=Array.from({length:9},()=>new Set()), b=Array.from({length:9},()=>new Set()); const nums=[1,2,3,4,5,6,7,8,9]; function place(i=0){ if(i===81) return true; const R=rowIdx(i),C=colIdx(i),B=boxIdx(R,C); for(const v of shuffle(nums.slice())){ if(!r[R].has(v)&&!c[C].has(v)&&!b[B].has(v)){ g[i]=v; r[R].add(v); c[C].add(v); b[B].add(v); if(place(i+1)) return true; g[i]=0; r[R].delete(v); c[C].delete(v); b[B].delete(v);} } return false;} place(); return g; }
-  function countSolutions(p,limit=2){ const g=p.slice(); let sol=0; function candAt(i){ const R=rowIdx(i),C=colIdx(i),u=new Set(); for(let k=0;k<9;k++){u.add(g[R*9+k]);u.add(g[k*9+C]);} const br=Math.floor(R/3)*3,bc=Math.floor(C/3)*3; for(let rr=0;rr<3;rr++)for(let cc=0;cc<3;cc++)u.add(g[(br+rr)*9+(bc+cc)]); const res=[]; for(let v=1;v<=9;v++)if(!u.has(v))res.push(v); return res;} function best(){ let best=-1,cand=null; for(let i=0;i<81;i++)if(g[i]===0){ const c=candAt(i); if(c.length===0) return {i,c:[]}; if(!cand||c.length<cand.length){best=i;cand=c;} } return {i:best,c:cand}; } function dfs(){ if(sol>=limit) return; const {i,c}=best(); if(i===-1){sol++;return;} for(const v of c){g[i]=v;dfs();g[i]=0;if(sol>=limit)return;} } dfs(); return sol;}
-  const DIFF={easy:40,medium:32,hard:26};
-  function makePuzzle(solved,clues){ const p=solved.slice(), ord=shuffle([...Array(81).keys()]); let left=81; for(const i of ord){ if(left<=clues) break; const bak=p[i]; p[i]=0; if(countSolutions(p,2)!==1){p[i]=bak;} else left--; } return p; }
+    /*************** 전역 상태 ***************/
+    let solution = [...Array(9)].map(()=>Array(9).fill(0));
+    let puzzle   = [...Array(9)].map(()=>Array(9).fill(0));
+    let state    = [...Array(9)].map(()=>Array(9).fill(0)); // 진행중 보드
+    let given    = [...Array(9)].map(()=>Array(9).fill(false));
+    let selected = {r:null,c:null};
+    let timer=0,timerId=null, mistakes=0;
 
-  const state={puzzle:[],solved:[],fixed:[],won:false,revealed:false,startTs:null,timer:null};
-  const gridEl=document.getElementById('grid'), cells=[]; let select=null;
+    /*************** 보드 DOM 생성 ***************/
+    const boardEl = document.getElementById('board');
+    function buildBoard(){
+      boardEl.innerHTML='';
+      for(let r=0;r<9;r++){
+        for(let c=0;c<9;c++){
+          const div=document.createElement('div');
+          div.className='cell';
+          div.dataset.r=r; div.dataset.c=c;
+          div.addEventListener('click',()=>selectCell(r,c));
+          boardEl.appendChild(div);
+        }
+      }
+    }
+
+    function renderBoard(){
+      let empty=0;
+      [...boardEl.children].forEach(cell=>{
+        const r=+cell.dataset.r, c=+cell.dataset.c;
+        const v=state[r][c];
+        cell.textContent = v? v : '';
+        cell.classList.remove('given','editable','selected','same','error');
+        if(given[r][c]) cell.classList.add('given');
+        else cell.classList.add('editable');
+        if(selected.r===r && selected.c===c) cell.classList.add('selected');
+        if(v && selected.r!==null && state[selected.r][selected.c]===v) cell.classList.add('same');
+        if(!v) empty++;
+      });
+      document.getElementById('info-empty').textContent=empty;
+      document.getElementById('info-errors').textContent=mistakes;
+    }
+
+    function selectCell(r,c){
+      if(given[r][c]) return;
+      selected={r,c};
+      renderBoard();
+    }
+
+    /*************** 숫자 패드 ***************/
+    const padEl=document.getElementById('pad');
+    function buildPad(){
+      padEl.innerHTML='';
+      for(let n=1;n<=9;n++){
+        const b=document.createElement('button');
+        b.textContent=n;
+        b.addEventListener('click',()=>place(n));
+        padEl.appendChild(b);
+      }
+      const erase=document.createElement('button');
+      erase.textContent='지우기';
+      erase.className='erase';
+      erase.addEventListener('click',()=>place(0));
+      padEl.appendChild(erase);
+    }
+
+    function place(n){
+      const {r,c}=selected;
+      if(r===null) return;
+      if(given[r][c]) return;
+      state[r][c]=n||0;
+      renderBoard();
+      checkWin();
+    }
+
+    /*************** 타이머 ***************/
+    function startTimer(){
+      stopTimer();
+      timer=0;
+      timerId=setInterval(()=>{
+        timer++;
+        const m=String(Math.floor(timer/60)).padStart(2,'0');
+        const s=String(timer%60).padStart(2,'0');
+        document.getElementById('info-time').textContent=`${m}:${s}`;
+      },1000);
+    }
+    function stopTimer(){ if(timerId){clearInterval(timerId);timerId=null} }
+
+    /*************** 스도쿠 생성/해결 ***************/
+    function solveCount(board, limit=2){
+      // 해답 개수 카운트(유일해답 검증용)
+      let count=0;
+      function helper(b){
+        if(count>=limit) return;
+        let r=-1,c=-1;
+        outer: for(let i=0;i<9;i++)for(let j=0;j<9;j++)if(b[i][j]===0){r=i;c=j;break outer;}
+        if(r===-1){count++;return;}
+        const nums=shuffle([1,2,3,4,5,6,7,8,9]);
+        for(const v of nums){
+          if(valid(b,r,c,v)){
+            b[r][c]=v;
+            helper(b);
+            b[r][c]=0;
+            if(count>=limit) return;
+          }
+        }
+      }
+      helper(deepCopy(board));
+      return count;
+    }
+
+    function valid(b,r,c,v){
+      for(let i=0;i<9;i++){ if(b[r][i]===v||b[i][c]===v) return false; }
+      const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
+      for(let i=0;i<3;i++)for(let j=0;j<3;j++) if(b[br+i][bc+j]===v) return false;
+      return true;
+    }
+
+    function generateFull(){
+      const b=[...Array(9)].map(()=>Array(9).fill(0));
+      const rows=[0,1,2,3,4,5,6,7,8], cols=[0,1,2,3,4,5,6,7,8];
+      function fillCell(idx=0){
+        if(idx===81) return true;
+        const r=Math.floor(idx/9), c=idx%9;
+        const nums=shuffle([1,2,3,4,5,6,7,8,9]);
+        for(const v of nums){
+          if(valid(b,r,c,v)){ b[r][c]=v; if(fillCell(idx+1)) return true; b[r][c]=0; }
+        }
+        return false;
+      }
+      fillCell(0);
+      return b;
+    }
+
+    function makePuzzle(full, difficulty='normal'){
+      // 제거할 칸 수: 쉬움 40~46, 보통 47~53, 어려움 54~60 (빈칸 기준)
+      const removeMap={
+        easy:[40,46], normal:[47,53], hard:[54,60]
+      };
+      const [lo,hi]=removeMap[difficulty]||removeMap.normal;
+      const holes=rand(lo,hi);
+      const p=deepCopy(full);
+      let positions=[];
+      for(let r=0;r<9;r++)for(let c=0;c<9;c++) positions.push([r,c]);
+      shuffle(positions);
+      let removed=0;
+      for(const [r,c] of positions){
+        const backup=p[r][c];
+        p[r][c]=0;
+        // 유일해답 유지 여부 확인
+        if(solveCount(p,2)!==1){
+          p[r][c]=backup; // 되돌림
+          continue;
+        }
+        removed++;
+        if(removed>=holes) break;
+      }
+      return p;
+    }
+
+    /*************** 검증/상태 ***************/
+    function highlightErrors(){
+      let errors=0;
+      [...boardEl.children].forEach(cell=>{
+        cell.classList.remove('error');
+        const r=+cell.dataset.r, c=+cell.dataset.c;
+        const v=state[r][c];
+        if(!v) return;
+        // row
+        for(let cc=0;cc<9;cc++){
+          if(cc!==c && state[r][cc]===v){cell.classList.add('error');errors++;break;}
+        }
+        // col
+        for(let rr=0;rr<9;rr++){
+          if(rr!==r && state[rr][c]===v){cell.classList.add('error');errors++;break;}
+        }
+        // box
+        const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
+        for(let i=0;i<3;i++)for(let j=0;j<3;j++){
+          const rr=br+i, cc=bc+j;
+          if(!(rr===r&&cc===c) && state[rr][cc]===v){cell.classList.add('error');errors++;i=3;j=3;}
+        }
+      });
+      mistakes=errors;
+      document.getElementById('info-errors').textContent=mistakes;
+    }
+
+    function checkWin(){
+      // 모두 채웠고 오류 없음
+      for(let r=0;r<9;r++)for(let c=0;c<9;c++){
+        if(state[r][c]===0) return;
+        if(state[r][c]!==solution[r][c]) return;
+      }
+      stopTimer();
+      setTimeout(()=>alert('🎉 클리어! 멋져요!'),50);
+    }
+
+    /*************** 퍼즐 로딩/초기화 ***************/
+    function loadFromShare(urlStr){
+      try{
+        const url=new URL(urlStr);
+        const qp=url.searchParams;
+        if(!qp.has('p')||!qp.has('s')) return false;
+        const p=decode(qp.get('p'));
+        const s=decode(qp.get('s'));
+        puzzle=p; solution=s;
+        given=[...Array(9)].map(()=>Array(9).fill(false));
+        for(let r=0;r<9;r++)for(let c=0;c<9;c++){
+          given[r][c]=puzzle[r][c]!==0;
+        }
+        state=deepCopy(puzzle);
+        return true;
+      }catch{ return false; }
+    }
+
+    function newGame(diff){
+      document.getElementById('info-diff').textContent=
+        diff==='easy'?'쉬움':diff==='hard'?'어려움':'보통';
+      const full=generateFull();
+      const puz=makePuzzle(full,diff);
+      solution=full; puzzle=puz; state=deepCopy(puz);
+      given=[...Array(9)].map(()=>Array(9).fill(false));
+      for(let r=0;r<9;r++)for(let c=0;c<9;c++) given[r][c]=puzzle[r][c]!==0;
+      selected={r:null,c:null}; mistakes=0;
+      startTimer(); renderBoard();
+      history.replaceState({},'',makeShareURL()); // URL 갱신
+    }
+
+    /*************** 공유 ***************/
+    function encode(board){
+      // 0-9를 base10 문자열로 81자리
+      return board.flat().join('');
+    }
+    function decode(str){
+      const arr=[...str].map(ch=>parseInt(ch,10));
+      const b=[...Array(9)].map(()=>Array(9).fill(0));
+      for(let i=0;i<81;i++){ b[Math.floor(i/9)][i%9]=arr[i]||0; }
+      return b;
+    }
+    function makeShareURL(){
+      const url=new URL(location.href);
+      url.searchParams.set('p',encode(puzzle));
+      url.searchParams.set('s',encode(solution));
+      return url.toString();
+    }
+    async function sharePuzzle(){
+      const shareData={
+        title:'스도쿠 퍼즐',
+        text:'같이 풀어봐요! 아래 링크로 열 수 있어요.',
+        url: makeShareURL()
+      };
+      if(navigator.share){
+        try{ await navigator.share(shareData);} catch{}
+      }else{
+        await navigator.clipboard.writeText(shareData.url);
+        alert('공유 링크를 클립보드에 복사했어요!');
+      }
+    }
+
+    /*************** 이벤트 바인딩 ***************/
+    document.getElementById('btn-new').addEventListener('click',()=>{
+      newGame(document.getElementById('difficulty').value);
+    });
+    document.getElementById('btn-check').addEventListener('click',highlightErrors);
+    document.getElementById('btn-solve').addEventListener('click',()=>{
+      state=deepCopy(solution); renderBoard(); highlightErrors(); checkWin();
+    });
+    document.getElementById('btn-reset').addEventListener('click',()=>{
+      state=deepCopy(puzzle); mistakes=0; renderBoard(); highlightErrors();
+    });
+    document.getElementById('btn-share').addEventListener('click',sharePuzzle);
+    document.getElementById('btn-copy').addEventListener('click',async()=>{
+      await navigator.clipboard.writeText(makeShareURL());
+      alert('현재 퍼즐 URL을 복사했어요!');
+    });
+    document.getElementById('difficulty').addEventListener('change', (e)=>{
+      // ✅ 난이도 바꾸면 자동 새 퍼즐
+      newGame(e.target.value);
+    });
+
+    /*************** 초기 구동 ***************/
+    buildBoard(); buildPad();
+    // 공유 링크로 들어온 경우 그 퍼즐 로드
+    if(!loadFromShare(location.href)){
+      newGame('normal');
+    }else{
+      startTimer(); renderBoard(); history.replaceState({},'',makeShareURL());
+      document.getElementById('info-diff').textContent='공유 퍼즐';
+    }
+
+    // 키보드 입력 지원(PC)
+    document.addEventListener('keydown',e=>{
+      if(selected.r===null) return;
+      if(e.key>='1' && e.key<='9') place(parseInt(e.key,10));
+      if(e.key==='Backspace' || e.key==='Delete' || e.key==='0') place(0);
+      if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){
+        const dr = e.key==='ArrowUp'?-1 : e.key==='ArrowDown'?+1 : 0;
+        const dc = e.key==='ArrowLeft'?-1 : e.key==='ArrowRight'?+1 : 0;
+        let r=selected.r, c=selected.c;
+        do{
+          r=(r+dr+9)%9; c=(c+dc+9)%9;
+        }while(given[r][c]); // 주어진 칸은 건너뜀
+        selectCell(r,c);
+      }
+    });
+  </script>
+</body>
+</html>
