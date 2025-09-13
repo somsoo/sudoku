@@ -315,6 +315,7 @@
       noteMode:false,
       startTs:null, timerId:null,
       won:false,
+      revealed:false,
     };
 
     // ===== UI =====
@@ -391,8 +392,22 @@
     function onInput(i,raw){ const n=Number(raw.replace(/[^1-9]/g,'')); setValue(i, isNaN(n)?0:n); }
     function toggleNotes(){ state.noteMode=!state.noteMode; document.getElementById('btnNotes').textContent='연필 모드: '+(state.noteMode?'켬':'끔'); render(); }
     function checkErrors(){ render(); flash('오류를 표시했어요'); }
-    function showSolution(){ state.puzzle=state.solved.slice(); for(let i=0;i<81;i++) state.fixed[i]=true; saveLocal(); render(); stopTimer(); }
-    function resetBoard(){ state.puzzle=state.initialPuzzle.slice(); state.fixed=state.initialFixed.slice(); saveLocal(); render(); startTimer(); }
+    function showSolution(){
+      // 해답 보기 시에는 축하 모달이 뜨지 않도록 플래그 설정
+      state.revealed = true;
+      state.puzzle = state.solved.slice();
+      for(let i=0;i<81;i++) state.fixed[i] = true;
+      saveLocal();
+      render();
+      stopTimer();
+      flash('해답을 표시했어요');
+    }
+    function resetBoard(){
+      state.puzzle=state.initialPuzzle.slice();
+      state.fixed=state.initialFixed.slice();
+      state.revealed=false; state.revealed=false; state.won=false;
+      saveLocal(); render(); startTimer();
+    }
 
     function newGame(level='easy'){
       // URL에 시드/난이도 기록 (재현/공유)
@@ -408,7 +423,7 @@
       const puzzle=makePuzzleFromSolved(solved, target);
       state.solved=solved; state.puzzle=puzzle; state.fixed=puzzle.map(v=>v!==0);
       state.initialPuzzle=puzzle.slice(); state.initialFixed=state.fixed.slice();
-      state.won=false;
+      state.revealed=false; state.won=false;
       statLevel.textContent = levelEl.options[levelEl.selectedIndex]?.textContent || '쉬움';
       saveLocal(); render(); startTimer();
     }
@@ -431,8 +446,14 @@
 
     // 완료 체크
     function checkWin(){
-      if(state.won) return;
+      // 해답 보기로 채운 상태(revealed)는 승리로 처리하지 않음
+      if(state.won || state.revealed) return;
       for(let i=0;i<81;i++){ if(!state.puzzle[i] || state.puzzle[i]!==state.solved[i]) return; }
+      state.won = true; stopTimer();
+      const sec=Math.floor((Date.now()-state.startTs)/1000);
+      document.getElementById('winText').textContent = `난이도: ${levelEl.options[levelEl.selectedIndex].textContent} · 시간: ${fmtTime(sec)}`;
+      document.getElementById('winModal').style.display='grid';
+    }
       state.won = true; stopTimer();
       const sec=Math.floor((Date.now()-state.startTs)/1000);
       document.getElementById('winText').textContent = `난이도: ${levelEl.options[levelEl.selectedIndex].textContent} · 시간: ${fmtTime(sec)}`;
