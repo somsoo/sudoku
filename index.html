@@ -8,28 +8,24 @@
   <meta name="description" content="빠르고 깔끔한 스도쿠. 오프라인에서도 부드럽게, 해답 유일성 보장 생성기 탑재. 난이도별 퍼즐, 타이머, 오류 체크, 공유까지 한 페이지로!" />
   <link rel="canonical" href="https://sudoku.enjoy-onepage.com/" />
   <meta name="robots" content="index,follow" />
-  <meta name="theme-color" content="#0ea5e9" />  <!-- Open Graph / Kakao / SNS Preview -->  <meta property="og:locale" content="ko_KR" />
+  <meta name="theme-color" content="#38bdf8" />  <!-- Open Graph / Kakao / SNS Preview -->  <meta property="og:locale" content="ko_KR" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Sudoku — 즐겨요 원페이지" />
   <meta property="og:title" content="Sudoku — 원페이지 퍼즐" />
   <meta property="og:description" content="난이도별 스도쿠를 한 페이지에서. 해답 유일성 보장, 가벼운 인터페이스." />
   <meta property="og:url" content="https://sudoku.enjoy-onepage.com/" />
-  <meta property="og:image" content="/og-image.png" /> <!-- 나중에 실제 이미지로 교체 -->
-  <meta property="og:image:alt" content="Sudoku one-page preview" />  <!-- Twitter Card -->  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:image" content="/og-image.png" />
+  <meta property="og:image:alt" content="Sudoku one-page preview" />  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Sudoku — 원페이지 퍼즐" />
   <meta name="twitter:description" content="난이도별 스도쿠를 한 페이지에서. 해답 유일성 보장, 가벼운 인터페이스." />
-  <meta name="twitter:image" content="/og-image.png" />  <!-- Favicon / App Icons (임시 파일명, 추후 교체) -->  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />  <!-- Structured Data (SEO) -->  <script type="application/ld+json">
+  <meta name="twitter:image" content="/og-image.png" />  <!-- Icons -->  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />  <!-- Structured Data -->  <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Sudoku — 즐겨요 원페이지",
     "url": "https://sudoku.enjoy-onepage.com/",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://sudoku.enjoy-onepage.com/?q={query}",
-      "query-input": "required name=query"
-    }
+    "potentialAction": {"@type":"SearchAction","target":"https://sudoku.enjoy-onepage.com/?q={query}","query-input":"required name=query"}
   }
   </script>  <script type="application/ld+json">
   {
@@ -39,104 +35,77 @@
     "applicationCategory": "Game",
     "operatingSystem": "Web",
     "url": "https://sudoku.enjoy-onepage.com/",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" }
+    "offers": {"@type":"Offer","price":"0","priceCurrency":"KRW"}
   }
-  </script>  <!-- Google AdSense (임시 코드: client/slot 교체 필요) -->  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2228289204702106"
-          crossorigin="anonymous"></script>  <!-- Kakao SDK (APP KEY 교체 필요) -->  <script src="https://developers.kakao.com/sdk/js/kakao.min.js" defer></script>  <style>
+  </script>  <!-- Google AdSense (값 교체 필요) -->  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2228289204702106" crossorigin="anonymous"></script>  <!-- Kakao SDK (APP KEY 교체 필요) -->  <script src="https://developers.kakao.com/sdk/js/kakao.min.js" defer></script>  <style>
     :root{
-      --bg:#0b1020; /* page bg gradient base */
-      --card:#0f172a; /* slate-900ish */
-      --muted:#94a3b8; /* slate-400 */
-      --fg:#e2e8f0;   /* slate-200 */
-      --accent:#0ea5e9; /* sky-500 */
-      --accent-2:#22c55e; /* green-500 */
-      --danger:#ef4444; /* red-500 */
-      --grid:#1f2937; /* gray-800 */
-      --grid-strong:#334155; /* slate-700 */
-      --cell:#111827; /* gray-900 */
+      --bg:#f0f9ff;        /* 밝은 하늘색 배경 */
+      --card:#ffffff;      /* 흰색 카드 */
+      --muted:#64748b;     /* slate-500 */
+      --fg:#1e293b;        /* slate-800 */
+      --accent:#38bdf8;    /* sky-400 */
+      --accent-2:#22c55e;  /* green-500 */
+      --danger:#ef4444;    /* red-500 */
+      --grid:#cbd5e1;      /* slate-300 */
+      --grid-strong:#94a3b8;/* slate-400 */
+      --cell:#f8fafc;      /* 거의 흰색 */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; color:var(--fg); background:
-        radial-gradient(1200px 800px at 15% -10%, #172554 0%, transparent 60%),
-        radial-gradient(1200px 800px at 85% 110%, #0c4a6e 0%, transparent 60%),
-        var(--bg);
+      margin:0; color:var(--fg); background:var(--bg);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans KR, Apple SD Gothic Neo, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     }
     a{color:inherit}
 
     .wrap{max-width:1100px; margin:0 auto; padding:24px;}
     header{
       display:flex; align-items:center; justify-content:space-between;
-      gap:16px; padding:16px; border-radius:16px; background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));
-      border:1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(6px);
+      gap:16px; padding:16px; border-radius:16px; background:#e0f2fe; border:1px solid #bae6fd;
     }
     .brand{display:flex; gap:12px; align-items:center}
-    .logo{
-      width:40px; height:40px; border-radius:12px; background:#0ea5e9 url('/favicon.png') center/cover no-repeat;
-      box-shadow:0 8px 24px rgba(14,165,233,.35);
-    }
+    .logo{width:40px; height:40px; border-radius:12px; background:#38bdf8 url('/favicon.png') center/cover no-repeat; box-shadow:0 4px 12px rgba(56,189,248,.35)}
     .title{display:flex; flex-direction:column}
-    .title h1{font-size:20px; margin:0; letter-spacing:.2px}
+    .title h1{font-size:20px; margin:0; color:#0284c7; letter-spacing:.2px}
     .title p{margin:2px 0 0; color:var(--muted); font-size:12px}
 
-    .share{
-      display:flex; gap:8px; align-items:center
-    }
-    .btn{border:1px solid rgba(255,255,255,.1); background:#0b1222; color:var(--fg);
-      padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600; transition: all .2s ease;
-    }
-    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.2)}
-    .btn.accent{background:var(--accent); color:#001730; border-color:transparent}
+    .share{display:flex; gap:8px; align-items:center}
+    .btn{border:1px solid #bae6fd; background:#f0f9ff; color:var(--fg); padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600; transition: all .2s ease;}
+    .btn:hover{background:#bae6fd}
+    .btn.accent{background:var(--accent); color:white; border-color:transparent}
 
     main{display:grid; grid-template-columns: 1fr; gap:16px; margin-top:16px}
+    .ad{display:flex; justify-content:center; align-items:center; background:#e0f2fe; border:1px dashed #bae6fd; border-radius:12px; padding:8px}
 
-    /* Top ad (responsive) */
-    .ad{display:flex; justify-content:center; align-items:center; background:rgba(255,255,255,0.03);
-      border:1px dashed rgba(255,255,255,0.08); border-radius:12px; padding:8px}
+    .board-wrap{display:grid; grid-template-columns: 1fr 340px; gap:16px}
+    @media (max-width:980px){ .board-wrap{ grid-template-columns: 1fr; } }
 
-    .board-wrap{
-      display:grid; grid-template-columns: 1fr 340px; gap:16px;
-    }
-    @media (max-width: 980px){ .board-wrap{ grid-template-columns: 1fr; } }
-
-    .card{background:var(--card); border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:16px}
+    .card{background:var(--card); border:1px solid #e2e8f0; border-radius:16px; padding:16px}
 
     .controls{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px}
     .controls .btn{height:36px}
-    .field{display:flex; gap:8px; align-items:center}
-    select{height:36px; border-radius:10px; background:#0b1222; color:var(--fg); border:1px solid rgba(255,255,255,.1); padding:0 10px}
+    select{height:36px; border-radius:10px; background:#f0f9ff; color:var(--fg); border:1px solid #bae6fd; padding:0 10px}
 
-    /* Sudoku grid */
     .grid{display:grid; grid-template-columns: repeat(9, 1fr); gap:1px; background:var(--grid); border:2px solid var(--grid-strong); border-radius:12px; overflow:hidden}
     .cell{aspect-ratio:1/1; background:var(--cell); position:relative}
-    .cell input{
-      width:100%; height:100%; background:transparent; border:0; color:var(--fg); text-align:center; font-weight:700; font-size:clamp(18px, 3.5vw, 28px);
-      outline:none; caret-color:transparent;
-    }
-    .cell input:disabled{color:#93c5fd}
+    .cell input{width:100%; height:100%; background:transparent; border:0; color:var(--fg); text-align:center; font-weight:700; font-size:clamp(18px, 3.5vw, 28px); outline:none; caret-color:transparent}
+    .cell input:disabled{color:#0284c7}
     .cell.error input{color:var(--danger)}
-    .cell .note{position:absolute; inset:3px; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:2px; font-size:10px; color:#94a3b8}
+    .cell .note{position:absolute; inset:3px; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:2px; font-size:10px; color:#64748b}
     .cell .note span{display:flex; align-items:center; justify-content:center}
 
-    /* thick borders every 3 */
-    .grid .cell:nth-child(3n+1){ }
-    .grid .cell{ box-shadow: inset 0 0 0 1px rgba(255,255,255,.02) }
     .grid-row-2, .grid-row-5{ box-shadow: 0 3px 0 0 var(--grid-strong) inset }
     .grid-col-2, .grid-col-5{ box-shadow: 3px 0 0 0 var(--grid-strong) inset }
 
     .side{display:flex; flex-direction:column; gap:12px}
     .stats{display:grid; grid-template-columns: 1fr 1fr; gap:8px}
-    .stat{background:#0b1222; border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:12px}
+    .stat{background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px}
     .stat h3{margin:0 0 6px; font-size:12px; color:var(--muted)}
     .stat p{margin:0; font-size:18px; font-weight:800}
 
-    .keypad{display:grid; grid-template-columns: repeat(9, 1fr); gap:8px}
-    .keypad .btn{height:44px; font-size:16px; background:#0b1222}
+    .keypad{display:grid; grid-template-columns: repeat(9, 1fr); gap:8px; margin-top:12px}
+    .keypad .btn{height:44px; font-size:16px; background:#f0f9ff}
 
     footer{margin:24px 0 8px; color:var(--muted); font-size:12px; text-align:center}
     .links{display:flex; justify-content:center; gap:12px; margin-top:6px}
@@ -148,7 +117,7 @@
         <div class="logo" aria-hidden="true"></div>
         <div class="title">
           <h1>Sudoku — 즐겨요 원페이지</h1>
-          <p>가볍고 빠른 스도쿠 · 유일해 보장 생성기</p>
+          <p>상큼하고 깔끔한 스도쿠 · 유일해 보장 생성기</p>
         </div>
       </div>
       <div class="share">
@@ -158,11 +127,9 @@
       </div>
     </header><!-- Top Leaderboard Ad -->
 <div class="ad card" aria-label="광고 영역 상단">
-  <!-- Google AdSense: 상단 반응형 -->
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-2228289204702106"  <!-- 교체 -->
-       data-ad-slot="7464033680"                 <!-- 교체 -->
+  <ins class="adsbygoogle" style="display:block"
+       data-ad-client="ca-pub-2228289204702106"
+       data-ad-slot="7464033680"
        data-ad-format="auto"
        data-full-width-responsive="true"></ins>
   <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
@@ -172,14 +139,12 @@
   <div class="board-wrap">
     <section class="card">
       <div class="controls" role="group" aria-label="게임 컨트롤">
-        <div class="field">
-          <label for="level" class="sr-only">난이도</label>
-          <select id="level" aria-label="난이도">
-            <option value="easy">쉬움</option>
-            <option value="medium">보통</option>
-            <option value="hard">어려움</option>
-          </select>
-        </div>
+        <label for="level" class="sr-only" style="position:absolute;left:-9999px">난이도</label>
+        <select id="level" aria-label="난이도">
+          <option value="easy">쉬움</option>
+          <option value="medium">보통</option>
+          <option value="hard">어려움</option>
+        </select>
         <button class="btn" id="btnNew">새 퍼즐</button>
         <button class="btn" id="btnCheck">오류 체크</button>
         <button class="btn" id="btnSolve">해답 보기</button>
@@ -189,10 +154,9 @@
 
       <!-- In-content Ad -->
       <div class="ad" aria-label="광고 영역 본문">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-2228289204702106"  <!-- 교체 -->
-             data-ad-slot="6150952012"                 <!-- 교체 -->
+        <ins class="adsbygoogle" style="display:block"
+             data-ad-client="ca-pub-2228289204702106"
+             data-ad-slot="6150952012"
              data-ad-format="rectangle, horizontal"
              data-full-width-responsive="true"></ins>
         <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
@@ -231,10 +195,9 @@
 
       <!-- Side Ad (medium rectangle) -->
       <section class="card ad" aria-label="광고 영역 사이드">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-2228289204702106"  <!-- 교체 -->
-             data-ad-slot="3524788673"                 <!-- 교체 -->
+        <ins class="adsbygoogle" style="display:block"
+             data-ad-client="ca-pub-2228289204702106"
+             data-ad-slot="3524788673"
              data-ad-format="rectangle"
              data-full-width-responsive="true"></ins>
         <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
@@ -255,7 +218,7 @@
   </div>  <script>
     // ===== Kakao init (APP KEY 교체) =====
     window.addEventListener('DOMContentLoaded', () => {
-      try { if (window.Kakao && !Kakao.isInitialized()) Kakao.init('KAKAO_JAVASCRIPT_KEY'); } catch(e){}
+      try { if (window.Kakao && !Kakao.isInitialized()) Kakao.init('b157f51afb710d60c8b6bec3dc9a2d1f'); } catch(e){}
     });
 
     // ===== Utils =====
@@ -328,6 +291,9 @@
       notes:new Array(81).fill(0).map(()=>new Set()),
       puzzle:new Array(81).fill(0),
       solved:new Array(81).fill(0),
+      // 초기 퍼즐/고정 마스크 백업 (초기화용)
+      initialPuzzle:new Array(81).fill(0),
+      initialFixed:new Array(81).fill(false),
       noteMode:false,
       startTs:null, timerId:null,
     };
@@ -340,8 +306,7 @@
     const statEmpty=document.getElementById('statEmpty');
     const statErrors=document.getElementById('statErrors');
 
-    // build 9x9 cells
-    const cells=[];
+    const cells=[]; let selectIdx=null;
     for(let r=0;r<9;r++){
       for(let c=0;c<9;c++){
         const i=r*9+c;
@@ -358,7 +323,6 @@
       }
     }
 
-    // keypad
     document.querySelectorAll('.keypad .btn').forEach(btn=>{
       btn.addEventListener('click',()=>{ if(selectIdx!=null){ onInput(selectIdx, btn.dataset.key); cells[selectIdx].input.focus(); } });
     });
@@ -385,16 +349,12 @@
             imageUrl: location.origin + '/og-image.png',
             link: { mobileWebUrl: location.href, webUrl: location.href }
           },
-          buttons: [
-            { title: '지금 풀기', link: { mobileWebUrl: location.href, webUrl: location.href } }
-          ]
+          buttons: [ { title: '지금 풀기', link: { mobileWebUrl: location.href, webUrl: location.href } } ]
         });
       }catch(e){ alert('카카오톡 공유를 사용할 수 없어요.'); }
     };
 
-    // ===== Game Logic =====
-    let selectIdx=null;
-
+    // ===== Rendering =====
     function render(){
       let empty=0, errors=0;
       for(let i=0;i<81;i++){
@@ -406,10 +366,7 @@
         if(!v) empty++;
         // notes
         note.style.display = state.noteMode && !isFixed ? 'grid' : 'none';
-        if(state.noteMode){
-          const set=state.notes[i];
-          [...note.children].forEach((s,idx)=>{ s.textContent = set.has(idx+1) ? String(idx+1) : ''; });
-        }
+        if(state.noteMode){ const set=state.notes[i]; [...note.children].forEach((s,idx)=>{ s.textContent = set.has(idx+1) ? String(idx+1) : ''; }); }
         if(cell.classList.contains('error')) errors++;
       }
       statEmpty.textContent=String(empty);
@@ -418,72 +375,54 @@
 
     function setValue(i, val){
       if(state.fixed[i]) return;
-      const n = Number(val)||0;
-      if(n<0||n>9) return;
-      if(state.noteMode && n!==0){
-        // toggle note
-        if(state.notes[i].has(n)) state.notes[i].delete(n); else state.notes[i].add(n);
-      } else {
-        state.puzzle[i]=n;
-        state.notes[i].clear();
-      }
-      saveLocal();
-      render();
+      const n = Number(val)||0; if(n<0||n>9) return;
+      if(state.noteMode && n!==0){ if(state.notes[i].has(n)) state.notes[i].delete(n); else state.notes[i].add(n); }
+      else { state.puzzle[i]=n; state.notes[i].clear(); }
+      saveLocal(); render();
     }
 
-    function onInput(i, raw){
-      const n = Number(raw.replace(/[^1-9]/g,''));
-      setValue(i, isNaN(n)?0:n);
-    }
+    function onInput(i, raw){ const n = Number(raw.replace(/[^1-9]/g,'')); setValue(i, isNaN(n)?0:n); }
+    function toggleNotes(){ state.noteMode=!state.noteMode; document.getElementById('btnNotes').textContent='연필 모드: '+(state.noteMode?'켬':'끔'); render(); }
 
-    function toggleNotes(){
-      state.noteMode=!state.noteMode;
-      document.getElementById('btnNotes').textContent='연필 모드: '+(state.noteMode?'켬':'끔');
-      render();
-    }
+    function checkErrors(){ render(); flash('오류를 표시했어요'); }
 
-    function checkErrors(){
-      // 단순 검증: 현재 값이 해답과 다르면 error 표시 (render에서 처리)
-      render();
-      flash('오류를 표시했어요');
-    }
-
-    function showSolution(){
-      state.puzzle=state.solved.slice();
-      for(let i=0;i<81;i++) state.fixed[i]=true;
-      saveLocal();
-      render();
-      stopTimer();
-    }
+    function showSolution(){ state.puzzle=state.solved.slice(); for(let i=0;i<81;i++) state.fixed[i]=true; saveLocal(); render(); stopTimer(); }
 
     function resetBoard(){
-      for(let i=0;i<81;i++) if(!state.fixed[i]){ state.puzzle[i]=0; state.notes[i].clear(); }
-      saveLocal();
-      render();
+      // 시작 상태로 되돌리기 (해답 보기 후에도 복원)
+      state.puzzle = state.initialPuzzle.slice();
+      state.fixed  = state.initialFixed.slice();
+      state.notes  = state.notes.map(()=>new Set());
+      saveLocal(); render(); startTimer();
     }
 
     function newGame(level='easy'){
       const solved=generateSolvedGrid();
       const target=DIFF[level]||DIFF.easy;
       const puzzle=makePuzzleFromSolved(solved, target);
-      state.solved=solved; state.puzzle=puzzle; state.fixed=puzzle.map(v=>v!==0); state.notes=state.notes.map(()=>new Set());
+      state.solved=solved; state.puzzle=puzzle; state.fixed=puzzle.map(v=>v!==0);
+      // 초기 상태 저장 (초기화용)
+      state.initialPuzzle = puzzle.slice();
+      state.initialFixed  = state.fixed.slice();
+      state.notes=state.notes.map(()=>new Set());
       statLevel.textContent = levelEl.options[levelEl.selectedIndex]?.textContent || '쉬움';
-      saveLocal();
-      render();
-      startTimer();
+      saveLocal(); render(); startTimer();
     }
 
     // ===== Timer =====
-    function startTimer(){ state.startTs=Date.now(); if(state.timerId) clearInterval(state.timerId); state.timerId=setInterval(updateTimer, 1000); updateTimer(); }
+    function startTimer(){ state.startTs=Date.now(); if(state.timerId) clearInterval(state.timerId); state.timerId=setInterval(updateTimer,1000); updateTimer(); }
     function stopTimer(){ if(state.timerId) clearInterval(state.timerId); state.timerId=null; }
     function updateTimer(){ if(!state.startTs) return; const s=Math.floor((Date.now()-state.startTs)/1000); const mm=String(Math.floor(s/60)).padStart(2,'0'); const ss=String(s%60).padStart(2,'0'); statTimer.textContent=mm+':'+ss; }
 
     // ===== LocalStorage (resume) =====
     function saveLocal(){ try{ localStorage.setItem('sudoku_state', JSON.stringify({ ...state, notes: state.notes.map(set=>[...set]) })); }catch(e){} }
-    function loadLocal(){ try{ const raw=localStorage.getItem('sudoku_state'); if(!raw) return false; const obj=JSON.parse(raw); state.fixed=obj.fixed; state.puzzle=obj.puzzle; state.solved=obj.solved; state.noteMode=obj.noteMode; state.notes=obj.notes.map(list=>new Set(list)); return true; }catch(e){ return false; } }
+    function loadLocal(){ try{ const raw=localStorage.getItem('sudoku_state'); if(!raw) return false; const obj=JSON.parse(raw); state.fixed=obj.fixed; state.puzzle=obj.puzzle; state.solved=obj.solved; state.noteMode=obj.noteMode; state.notes=obj.notes.map(list=>new Set(list)); // 초기 백업 없을 수 있어 보호
+      state.initialPuzzle = Array.isArray(obj.initialPuzzle)? obj.initialPuzzle : state.puzzle.slice();
+      state.initialFixed  = Array.isArray(obj.initialFixed)?  obj.initialFixed  : state.fixed.slice();
+      return true; }catch(e){ return false; } }
 
     // ===== Flash message =====
-    function flash(msg){ const el=document.createElement('div'); el.textContent=msg; Object.assign(el.style,{ position:'fixed', left:'50%', top:'20px', transform:'translateX(-50%)', background:'rgba(14,165,233,.95)', color:'#001730', padding:'10px 14px', borderRadius:'10px', fontWeight:'800', zIndex:9999, boxShadow:'0 10px 30px rgba(14,165,233,.5)'}); document.body.appendChild(el); setTimeout(()=>{ el.style.transition='all .4s'; el.style.opacity='0'; el.style.transform='translateX(-50%) translateY(-6px)'; setTimeout(()=>el.remove(), 400); }, 1100); }
+    function flash(msg){ const el=document.createElement('div'); el.textContent=msg; Object.assign(el.style,{ position:'fixed', left:'50%', top:'20px', transform:'translateX(-50%)', background:'rgba(56,189,248,.95)', color:'#003049', padding:'10px 14px', borderRadius:'10px', fontWeight:'800', zIndex:9999, boxShadow:'0 10px 30px rgba(56,189,248,.4)'}); document.body.appendChild(el); setTimeout(()=>{ el.style.transition='all .4s'; el.style.opacity='0'; el.style.transform='translateX(-50%) translateY(-6px)'; setTimeout(()=>el.remove(), 400); }, 1100); }
 
     // ===== Boot =====
     document.getElementById('year').textContent=new Date().getFullYear();
