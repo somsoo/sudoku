@@ -12,7 +12,7 @@
   <meta name="description" content="깔끔한 원페이지 스도쿠! 유일해답 보장 퍼즐 생성기 · 난이도별 퍼즐 · 오류 체크 · 해답 보기 · 공유 기능 제공" />
   <meta name="theme-color" content="#38bdf8" />
 
-  <!-- Open Graph / Kakao & Facebook preview -->
+  <!-- Open Graph -->
   <meta property="og:locale" content="ko_KR" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="SUDOKU 스도쿠 — 즐겨요 원페이지" />
@@ -57,7 +57,7 @@
     .btn.secondary{background:#e2f3ff;color:#075985}
     .btn.ghost{background:#ffffffd9}
 
-    /* small share menu */
+    /* share menu */
     .share-menu-wrap{position:relative}
     .share-menu{
       position:absolute; top:105%; left:0; background:#fff; border:1px solid #e2e8f0; border-radius:12px;
@@ -66,14 +66,12 @@
     .share-menu button{display:block; width:100%; text-align:left; border-radius:10px; border:0; padding:10px 12px; background:#fff; cursor:pointer}
     .share-menu button:hover{background:#f1f5f9}
 
-    /* top controls: only difficulty */
+    /* controls */
     .controls{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .controls label{font-weight:700}
-    select{
-      border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;background:#fff;font-weight:600
-    }
+    select{border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;background:#fff;font-weight:600}
 
-    /* action buttons: 2x2 grid */
+    /* action buttons grid */
     .actions{margin-top:8px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
     .btn.control{border:1px solid #cbd5e1;background:#fff;color:#075985;border-radius:10px;width:100%}
 
@@ -94,7 +92,7 @@
     .cell[data-r="8"]{border-bottom:3px solid var(--grid)}
     .cell[data-c="8"]{border-right:3px solid var(--grid)}
 
-    /* number pad (2행: 5 + 4) */
+    /* number pad */
     .pad{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:520px;margin:10px auto 0}
     .pad button{padding:14px 0;border-radius:14px;border:1px solid #cbd5e1;background:#fff;font-weight:900;font-size:1.15rem;cursor:pointer}
     .pad .erase{grid-column:span 2}
@@ -122,7 +120,6 @@
       <h1>SUDOKU 스도쿠</h1>
       <div class="header-sub">깔끔한 스도쿠 · 유일해답 보장 생성기 · 오프라인에서도 부드럽게</div>
 
-      <!-- 버튼 2개 유지: 공유(내부에서 카톡/시스템 선택) + URL 복사 -->
       <div class="header-buttons">
         <div class="share-menu-wrap">
           <button class="btn secondary" id="btn-share-open">공유</button>
@@ -144,7 +141,7 @@
          data-full-width-responsive="true"></ins>
     <script>try{(adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}</script>
 
-    <!-- 난이도 선택 행 -->
+    <!-- 난이도 -->
     <section class="controls">
       <label for="difficulty">난이도</label>
       <select id="difficulty" title="난이도">
@@ -155,7 +152,7 @@
       <strong id="info-diff" style="margin-left:4px;color:#0f172a">보통</strong>
     </section>
 
-    <!-- 액션 버튼 2행(2x2) -->
+    <!-- 액션 -->
     <section class="actions">
       <button class="btn control" id="btn-new">새 퍼즐</button>
       <button class="btn control" id="btn-check">오류 체크</button>
@@ -202,7 +199,7 @@
 
   <script>
     /* ========= 설정 ========= */
-    const KAKAO_APP_KEY = 'b157f51afb710d60c8b6bec3dc9a2d1f'; // ← 네 키 적용
+    const KAKAO_APP_KEY = 'b157f51afb710d60c8b6bec3dc9a2d1f';
 
     /* ========= 유틸 ========= */
     const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
@@ -216,8 +213,9 @@
     let given=[...Array(9)].map(()=>Array(9).fill(false));
     let selected={r:null,c:null};
     let timer=0,timerId=null,mistakes=0;
+    let revealed=false; // ✅ 해답보기 플래그
 
-    /* ========= 보드 DOM ========= */
+    /* ========= 보드 ========= */
     const boardEl=document.getElementById('board');
     function buildBoard(){
       boardEl.innerHTML='';
@@ -322,9 +320,17 @@
       });
       mistakes=errors; document.getElementById('info-errors').textContent=mistakes;
     }
+
+    /* ========= 승리 체크 (해답보기 시 차단) ========= */
     function checkWin(){
-      for(let r=0;r<9;r++)for(let c=0;c<9;c++){ if(state[r][c]===0) return; if(state[r][c]!==solution[r][c]) return; }
-      stopTimer(); document.getElementById('info-state').textContent='클리어! 🎉'; setTimeout(()=>alert('🎉 클리어! 멋져요!'),60);
+      if(revealed) return; // ✅ 해답을 본 상태면 축하 차단
+      for(let r=0;r<9;r++)for(let c=0;c<9;c++){
+        if(state[r][c]===0) return;
+        if(state[r][c]!==solution[r][c]) return;
+      }
+      stopTimer();
+      document.getElementById('info-state').textContent='클리어! 🎉';
+      setTimeout(()=>alert('🎉 클리어! 멋져요!'),60);
     }
 
     /* ========= 공유 인코딩 ========= */
@@ -344,7 +350,6 @@
         const p=url.searchParams.get('p'); const s=url.searchParams.get('s'); const d=url.searchParams.get('d')||'normal';
         if(!p||!s) return false;
         const puz=decode(p); const sol=decode(s);
-        // 간단 검증
         if(puz.length!==9||sol.length!==9) return false;
         puzzle=deepCopy(puz); solution=deepCopy(sol); state=deepCopy(puz);
         given=[...Array(9)].map(()=>Array(9).fill(false));
@@ -355,7 +360,7 @@
       }catch(e){ return false; }
     }
 
-    /* ========= 카카오 SDK 지연 로드 & 공유 ========= */
+    /* ========= 카카오 공유 ========= */
     let kakaoLoaded=false;
     function loadKakaoSDK(){
       return new Promise((resolve,reject)=>{
@@ -400,7 +405,6 @@
           ]
         });
       }catch(e){
-        // 문제가 있으면 시스템 공유로 폴백
         await shareSystem();
       }
       hideShareMenu();
@@ -408,6 +412,7 @@
 
     /* ========= 새게임/초기화 ========= */
     function newGame(diff){
+      revealed=false; // ✅ 해답보기 플래그 리셋
       document.getElementById('info-diff').textContent=diff==='easy'?'쉬움':diff==='hard'?'어려움':'보통';
       const full=generateFull(); const puz=makePuzzle(full,diff);
       solution=full; puzzle=puz; state=deepCopy(puz);
@@ -419,7 +424,6 @@
     }
 
     /* ========= 이벤트 ========= */
-    // 헤더 공유 메뉴
     const shareBtn = document.getElementById('btn-share-open');
     const shareMenu = document.getElementById('share-menu');
     function hideShareMenu(){ shareMenu.style.display='none'; }
@@ -431,15 +435,38 @@
 
     document.getElementById('btn-new').addEventListener('click',()=>newGame(document.getElementById('difficulty').value));
     document.getElementById('btn-check').addEventListener('click',highlightErrors);
-    document.getElementById('btn-solve').addEventListener('click',()=>{state=deepCopy(solution); renderBoard(); highlightErrors(); checkWin();});
-    document.getElementById('btn-reset').addEventListener('click',()=>{state=deepCopy(puzzle); mistakes=0; renderBoard(); highlightErrors(); document.getElementById('info-state').textContent='진행 중';});
-    document.getElementById('btn-copy').addEventListener('click',async()=>{await navigator.clipboard.writeText(makeShareURL()); alert('현재 퍼즐 URL을 복사했어요!');});
+
+    // ✅ 해답 보기: 축하 차단 & 전체 고정 처리
+    document.getElementById('btn-solve').addEventListener('click',()=>{
+      revealed = true;                 // 해답 보기 상태
+      state = deepCopy(solution);      // 해답으로 채우기
+      for(let r=0;r<9;r++) for(let c=0;c<9;c++) given[r][c]=true; // 모두 고정
+      renderBoard();
+      highlightErrors();
+      stopTimer();
+      document.getElementById('info-state').textContent='해답 표시됨';
+      // checkWin() 호출 없음
+    });
+
+    document.getElementById('btn-reset').addEventListener('click',()=>{
+      revealed = false;                // 리셋 시 플래그 해제 ✅
+      state=deepCopy(puzzle); mistakes=0;
+      renderBoard(); highlightErrors();
+      document.getElementById('info-state').textContent='진행 중';
+    });
+
+    document.getElementById('btn-copy').addEventListener('click',async()=>{
+      await navigator.clipboard.writeText(makeShareURL());
+      alert('현재 퍼즐 URL을 복사했어요!');
+    });
+
     document.getElementById('difficulty').addEventListener('change',e=>newGame(e.target.value));
 
     /* ========= 초기 구동 ========= */
     buildBoard(); buildPad();
     if(!loadFromShare(location.href)){ newGame('normal'); }
     else{
+      revealed=false; // 공유 불러오기 때는 사용자 플레이 상태로 시작
       startTimer(); renderBoard();
       history.replaceState({},'',makeShareURL());
       document.getElementById('info-diff').textContent=
