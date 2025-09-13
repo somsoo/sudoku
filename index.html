@@ -1,0 +1,492 @@
+<!doctype html>
+
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sudoku — 즐겨요 원페이지 | sudoku.enjoy-onepage.com</title>
+  <meta name="description" content="빠르고 깔끔한 스도쿠. 오프라인에서도 부드럽게, 해답 유일성 보장 생성기 탑재. 난이도별 퍼즐, 타이머, 오류 체크, 공유까지 한 페이지로!" />
+  <link rel="canonical" href="https://sudoku.enjoy-onepage.com/" />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#0ea5e9" />  <!-- Open Graph / Kakao / SNS Preview -->  <meta property="og:locale" content="ko_KR" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Sudoku — 즐겨요 원페이지" />
+  <meta property="og:title" content="Sudoku — 원페이지 퍼즐" />
+  <meta property="og:description" content="난이도별 스도쿠를 한 페이지에서. 해답 유일성 보장, 가벼운 인터페이스." />
+  <meta property="og:url" content="https://sudoku.enjoy-onepage.com/" />
+  <meta property="og:image" content="/og-image.png" /> <!-- 나중에 실제 이미지로 교체 -->
+  <meta property="og:image:alt" content="Sudoku one-page preview" />  <!-- Twitter Card -->  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sudoku — 원페이지 퍼즐" />
+  <meta name="twitter:description" content="난이도별 스도쿠를 한 페이지에서. 해답 유일성 보장, 가벼운 인터페이스." />
+  <meta name="twitter:image" content="/og-image.png" />  <!-- Favicon / App Icons (임시 파일명, 추후 교체) -->  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />  <!-- Structured Data (SEO) -->  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Sudoku — 즐겨요 원페이지",
+    "url": "https://sudoku.enjoy-onepage.com/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://sudoku.enjoy-onepage.com/?q={query}",
+      "query-input": "required name=query"
+    }
+  }
+  </script>  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Sudoku One-Page",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web",
+    "url": "https://sudoku.enjoy-onepage.com/",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" }
+  }
+  </script>  <!-- Google AdSense (임시 코드: client/slot 교체 필요) -->  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2228289204702106"
+          crossorigin="anonymous"></script>  <!-- Kakao SDK (APP KEY 교체 필요) -->  <script src="https://developers.kakao.com/sdk/js/kakao.min.js" defer></script>  <style>
+    :root{
+      --bg:#0b1020; /* page bg gradient base */
+      --card:#0f172a; /* slate-900ish */
+      --muted:#94a3b8; /* slate-400 */
+      --fg:#e2e8f0;   /* slate-200 */
+      --accent:#0ea5e9; /* sky-500 */
+      --accent-2:#22c55e; /* green-500 */
+      --danger:#ef4444; /* red-500 */
+      --grid:#1f2937; /* gray-800 */
+      --grid-strong:#334155; /* slate-700 */
+      --cell:#111827; /* gray-900 */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--fg); background:
+        radial-gradient(1200px 800px at 15% -10%, #172554 0%, transparent 60%),
+        radial-gradient(1200px 800px at 85% 110%, #0c4a6e 0%, transparent 60%),
+        var(--bg);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans KR, Apple SD Gothic Neo, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a{color:inherit}
+
+    .wrap{max-width:1100px; margin:0 auto; padding:24px;}
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:16px; padding:16px; border-radius:16px; background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(6px);
+    }
+    .brand{display:flex; gap:12px; align-items:center}
+    .logo{
+      width:40px; height:40px; border-radius:12px; background:#0ea5e9 url('/favicon.png') center/cover no-repeat;
+      box-shadow:0 8px 24px rgba(14,165,233,.35);
+    }
+    .title{display:flex; flex-direction:column}
+    .title h1{font-size:20px; margin:0; letter-spacing:.2px}
+    .title p{margin:2px 0 0; color:var(--muted); font-size:12px}
+
+    .share{
+      display:flex; gap:8px; align-items:center
+    }
+    .btn{border:1px solid rgba(255,255,255,.1); background:#0b1222; color:var(--fg);
+      padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600; transition: all .2s ease;
+    }
+    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.2)}
+    .btn.accent{background:var(--accent); color:#001730; border-color:transparent}
+
+    main{display:grid; grid-template-columns: 1fr; gap:16px; margin-top:16px}
+
+    /* Top ad (responsive) */
+    .ad{display:flex; justify-content:center; align-items:center; background:rgba(255,255,255,0.03);
+      border:1px dashed rgba(255,255,255,0.08); border-radius:12px; padding:8px}
+
+    .board-wrap{
+      display:grid; grid-template-columns: 1fr 340px; gap:16px;
+    }
+    @media (max-width: 980px){ .board-wrap{ grid-template-columns: 1fr; } }
+
+    .card{background:var(--card); border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:16px}
+
+    .controls{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px}
+    .controls .btn{height:36px}
+    .field{display:flex; gap:8px; align-items:center}
+    select{height:36px; border-radius:10px; background:#0b1222; color:var(--fg); border:1px solid rgba(255,255,255,.1); padding:0 10px}
+
+    /* Sudoku grid */
+    .grid{display:grid; grid-template-columns: repeat(9, 1fr); gap:1px; background:var(--grid); border:2px solid var(--grid-strong); border-radius:12px; overflow:hidden}
+    .cell{aspect-ratio:1/1; background:var(--cell); position:relative}
+    .cell input{
+      width:100%; height:100%; background:transparent; border:0; color:var(--fg); text-align:center; font-weight:700; font-size:clamp(18px, 3.5vw, 28px);
+      outline:none; caret-color:transparent;
+    }
+    .cell input:disabled{color:#93c5fd}
+    .cell.error input{color:var(--danger)}
+    .cell .note{position:absolute; inset:3px; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:2px; font-size:10px; color:#94a3b8}
+    .cell .note span{display:flex; align-items:center; justify-content:center}
+
+    /* thick borders every 3 */
+    .grid .cell:nth-child(3n+1){ }
+    .grid .cell{ box-shadow: inset 0 0 0 1px rgba(255,255,255,.02) }
+    .grid-row-2, .grid-row-5{ box-shadow: 0 3px 0 0 var(--grid-strong) inset }
+    .grid-col-2, .grid-col-5{ box-shadow: 3px 0 0 0 var(--grid-strong) inset }
+
+    .side{display:flex; flex-direction:column; gap:12px}
+    .stats{display:grid; grid-template-columns: 1fr 1fr; gap:8px}
+    .stat{background:#0b1222; border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:12px}
+    .stat h3{margin:0 0 6px; font-size:12px; color:var(--muted)}
+    .stat p{margin:0; font-size:18px; font-weight:800}
+
+    .keypad{display:grid; grid-template-columns: repeat(9, 1fr); gap:8px}
+    .keypad .btn{height:44px; font-size:16px; background:#0b1222}
+
+    footer{margin:24px 0 8px; color:var(--muted); font-size:12px; text-align:center}
+    .links{display:flex; justify-content:center; gap:12px; margin-top:6px}
+  </style></head>
+<body>
+  <div class="wrap">
+    <header aria-label="사이트 헤더">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>Sudoku — 즐겨요 원페이지</h1>
+          <p>가볍고 빠른 스도쿠 · 유일해 보장 생성기</p>
+        </div>
+      </div>
+      <div class="share">
+        <button class="btn" id="btnCopy">링크 복사</button>
+        <button class="btn" id="btnKakao">카카오톡 공유</button>
+        <a class="btn accent" href="https://sudoku.enjoy-onepage.com/">홈</a>
+      </div>
+    </header><!-- Top Leaderboard Ad -->
+<div class="ad card" aria-label="광고 영역 상단">
+  <!-- Google AdSense: 상단 반응형 -->
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-2228289204702106"  <!-- 교체 -->
+       data-ad-slot="7464033680"                 <!-- 교체 -->
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+</div>
+
+<main>
+  <div class="board-wrap">
+    <section class="card">
+      <div class="controls" role="group" aria-label="게임 컨트롤">
+        <div class="field">
+          <label for="level" class="sr-only">난이도</label>
+          <select id="level" aria-label="난이도">
+            <option value="easy">쉬움</option>
+            <option value="medium">보통</option>
+            <option value="hard">어려움</option>
+          </select>
+        </div>
+        <button class="btn" id="btnNew">새 퍼즐</button>
+        <button class="btn" id="btnCheck">오류 체크</button>
+        <button class="btn" id="btnSolve">해답 보기</button>
+        <button class="btn" id="btnReset">초기화</button>
+        <button class="btn" id="btnNotes">연필 모드: 끔</button>
+      </div>
+
+      <!-- In-content Ad -->
+      <div class="ad" aria-label="광고 영역 본문">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2228289204702106"  <!-- 교체 -->
+             data-ad-slot="6150952012"                 <!-- 교체 -->
+             data-ad-format="rectangle, horizontal"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+      </div>
+
+      <div id="grid" class="grid" aria-label="스도쿠 보드"></div>
+
+      <div class="keypad" aria-label="숫자 키패드">
+        <button class="btn" data-key="1">1</button>
+        <button class="btn" data-key="2">2</button>
+        <button class="btn" data-key="3">3</button>
+        <button class="btn" data-key="4">4</button>
+        <button class="btn" data-key="5">5</button>
+        <button class="btn" data-key="6">6</button>
+        <button class="btn" data-key="7">7</button>
+        <button class="btn" data-key="8">8</button>
+        <button class="btn" data-key="9">9</button>
+      </div>
+    </section>
+
+    <aside class="side">
+      <section class="card stats" aria-label="상태 표시">
+        <div class="stat"><h3>난이도</h3><p id="statLevel">쉬움</p></div>
+        <div class="stat"><h3>타이머</h3><p id="statTimer">00:00</p></div>
+        <div class="stat"><h3>남은 칸</h3><p id="statEmpty">0</p></div>
+        <div class="stat"><h3>오류 수</h3><p id="statErrors">0</p></div>
+      </section>
+
+      <section class="card" aria-label="도움말">
+        <h2 style="margin-top:0; font-size:16px">도움말</h2>
+        <p style="color:var(--muted); line-height:1.6">
+          같은 행, 같은 열, 같은 3×3 박스 안에는 1~9가 한 번씩만 들어갈 수 있어요.
+          연필 모드를 켜면 후보 숫자를 메모할 수 있습니다.
+        </p>
+      </section>
+
+      <!-- Side Ad (medium rectangle) -->
+      <section class="card ad" aria-label="광고 영역 사이드">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2228289204702106"  <!-- 교체 -->
+             data-ad-slot="3524788673"                 <!-- 교체 -->
+             data-ad-format="rectangle"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  <div>© <span id="year"></span> sudoku.enjoy-onepage.com</div>
+  <div class="links">
+    <a href="#" aria-label="개인정보 처리방침">개인정보 처리방침</a>
+    <span>·</span>
+    <a href="#" aria-label="문의">문의</a>
+  </div>
+</footer>
+
+  </div>  <script>
+    // ===== Kakao init (APP KEY 교체) =====
+    window.addEventListener('DOMContentLoaded', () => {
+      try { if (window.Kakao && !Kakao.isInitialized()) Kakao.init('KAKAO_JAVASCRIPT_KEY'); } catch(e){}
+    });
+
+    // ===== Utils =====
+    const RNG = () => Math.random();
+    const shuffle = arr => arr.sort(() => RNG() - 0.5);
+    const rowIdx = i => Math.floor(i/9); const colIdx = i => i%9; const boxIdx = (r,c)=>Math.floor(r/3)*3+Math.floor(c/3);
+
+    // ===== Generator: solved grid via backtracking =====
+    function generateSolvedGrid(){
+      const grid = new Array(81).fill(0);
+      const rows = Array.from({length:9},()=>new Set());
+      const cols = Array.from({length:9},()=>new Set());
+      const boxes = Array.from({length:9},()=>new Set());
+      const nums = [1,2,3,4,5,6,7,8,9];
+      function place(i=0){
+        if(i===81) return true;
+        const r=rowIdx(i), c=colIdx(i), b=boxIdx(r,c);
+        const order=shuffle(nums.slice());
+        for(const v of order){
+          if(!rows[r].has(v)&&!cols[c].has(v)&&!boxes[b].has(v)){
+            grid[i]=v; rows[r].add(v); cols[c].add(v); boxes[b].add(v);
+            if(place(i+1)) return true;
+            grid[i]=0; rows[r].delete(v); cols[c].delete(v); boxes[b].delete(v);
+          }
+        }
+        return false;
+      }
+      place(0); return grid;
+    }
+
+    // ===== Solver: count solutions (for uniqueness) =====
+    function countSolutions(puzzle, limit=2){
+      const grid=puzzle.slice(); let solutions=0;
+      function candidatesAt(i){
+        const r=rowIdx(i), c=colIdx(i);
+        const used=new Set();
+        for(let k=0;k<9;k++){ used.add(grid[r*9+k]); used.add(grid[k*9+c]); }
+        const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
+        for(let rr=0; rr<3; rr++) for(let cc=0; cc<3; cc++){ used.add(grid[(br+rr)*9+(bc+cc)]); }
+        const cand=[]; for(let v=1; v<=9; v++) if(!used.has(v)) cand.push(v); return cand;
+      }
+      function bestEmpty(){
+        let best=-1, bestCand=null;
+        for(let i=0;i<81;i++) if(grid[i]===0){
+          const cand=candidatesAt(i); if(cand.length===0) return {i, cand:[]};
+          if(!bestCand||cand.length<bestCand.length){ best=i; bestCand=cand; if(cand.length===1) break; }
+        }
+        return {i:best, cand:bestCand};
+      }
+      function dfs(){
+        if(solutions>=limit) return;
+        const {i, cand}=bestEmpty();
+        if(i===-1){ solutions++; return; }
+        for(const v of cand){ grid[i]=v; dfs(); grid[i]=0; if(solutions>=limit) return; }
+      }
+      dfs(); return solutions;
+    }
+
+    // ===== Puzzle maker: remove clues while unique =====
+    const DIFF = { easy:40, medium:32, hard:26 };
+    function makePuzzleFromSolved(solved, targetClues){
+      const puzzle=solved.slice(); const order=shuffle([...Array(81).keys()]); let clues=81;
+      for(const i of order){ if(clues<=targetClues) break; const b=puzzle[i]; puzzle[i]=0; if(countSolutions(puzzle,2)!==1){ puzzle[i]=b; } else { clues--; } }
+      return puzzle;
+    }
+
+    // ===== State =====
+    const state={
+      fixed:new Array(81).fill(false),
+      notes:new Array(81).fill(0).map(()=>new Set()),
+      puzzle:new Array(81).fill(0),
+      solved:new Array(81).fill(0),
+      noteMode:false,
+      startTs:null, timerId:null,
+    };
+
+    // ===== UI Build =====
+    const gridEl=document.getElementById('grid');
+    const levelEl=document.getElementById('level');
+    const statLevel=document.getElementById('statLevel');
+    const statTimer=document.getElementById('statTimer');
+    const statEmpty=document.getElementById('statEmpty');
+    const statErrors=document.getElementById('statErrors');
+
+    // build 9x9 cells
+    const cells=[];
+    for(let r=0;r<9;r++){
+      for(let c=0;c<9;c++){
+        const i=r*9+c;
+        const cell=document.createElement('div'); cell.className='cell';
+        if(r===2||r===5) cell.classList.add('grid-row-2');
+        if(c===2||c===5) cell.classList.add('grid-col-2');
+        const input=document.createElement('input'); input.inputMode='numeric'; input.maxLength=1; input.setAttribute('aria-label',`r${r+1} c${c+1}`);
+        const note=document.createElement('div'); note.className='note'; for(let k=1;k<=9;k++){ const s=document.createElement('span'); s.textContent=''; s.dataset.k=String(k); note.appendChild(s); }
+        cell.appendChild(input); cell.appendChild(note); gridEl.appendChild(cell);
+        cells.push({cell,input,note});
+        input.addEventListener('focus', ()=>selectIdx=i);
+        input.addEventListener('input', (e)=>onInput(i, input.value));
+        input.addEventListener('keydown', (e)=>{ if(['Backspace','Delete','0'].includes(e.key)) { setValue(i,0); e.preventDefault(); } });
+      }
+    }
+
+    // keypad
+    document.querySelectorAll('.keypad .btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{ if(selectIdx!=null){ onInput(selectIdx, btn.dataset.key); cells[selectIdx].input.focus(); } });
+    });
+
+    // controls
+    document.getElementById('btnNew').onclick=()=>newGame(levelEl.value);
+    document.getElementById('btnCheck').onclick=checkErrors;
+    document.getElementById('btnSolve').onclick=showSolution;
+    document.getElementById('btnReset').onclick=resetBoard;
+    document.getElementById('btnNotes').onclick=toggleNotes;
+
+    document.getElementById('btnCopy').onclick=()=>{
+      navigator.clipboard.writeText(location.href).then(()=>{ flash('링크를 복사했어요'); });
+    };
+
+    document.getElementById('btnKakao').onclick=()=>{
+      try{
+        if(!window.Kakao) return alert('Kakao SDK 로딩 중입니다. 잠시 후 다시 시도해주세요.');
+        Kakao.Share.sendDefault({
+          objectType: 'feed',
+          content: {
+            title: 'Sudoku — 즐겨요 원페이지',
+            description: '가볍고 빠른 스도쿠. 해답 유일성 보장 생성기 탑재!',
+            imageUrl: location.origin + '/og-image.png',
+            link: { mobileWebUrl: location.href, webUrl: location.href }
+          },
+          buttons: [
+            { title: '지금 풀기', link: { mobileWebUrl: location.href, webUrl: location.href } }
+          ]
+        });
+      }catch(e){ alert('카카오톡 공유를 사용할 수 없어요.'); }
+    };
+
+    // ===== Game Logic =====
+    let selectIdx=null;
+
+    function render(){
+      let empty=0, errors=0;
+      for(let i=0;i<81;i++){
+        const {cell,input,note}=cells[i];
+        const v=state.puzzle[i];
+        const isFixed=state.fixed[i];
+        input.disabled=isFixed; input.value=v?String(v):'';
+        cell.classList.toggle('error', v && state.solved[i]!==v && !isFixed);
+        if(!v) empty++;
+        // notes
+        note.style.display = state.noteMode && !isFixed ? 'grid' : 'none';
+        if(state.noteMode){
+          const set=state.notes[i];
+          [...note.children].forEach((s,idx)=>{ s.textContent = set.has(idx+1) ? String(idx+1) : ''; });
+        }
+        if(cell.classList.contains('error')) errors++;
+      }
+      statEmpty.textContent=String(empty);
+      statErrors.textContent=String(errors);
+    }
+
+    function setValue(i, val){
+      if(state.fixed[i]) return;
+      const n = Number(val)||0;
+      if(n<0||n>9) return;
+      if(state.noteMode && n!==0){
+        // toggle note
+        if(state.notes[i].has(n)) state.notes[i].delete(n); else state.notes[i].add(n);
+      } else {
+        state.puzzle[i]=n;
+        state.notes[i].clear();
+      }
+      saveLocal();
+      render();
+    }
+
+    function onInput(i, raw){
+      const n = Number(raw.replace(/[^1-9]/g,''));
+      setValue(i, isNaN(n)?0:n);
+    }
+
+    function toggleNotes(){
+      state.noteMode=!state.noteMode;
+      document.getElementById('btnNotes').textContent='연필 모드: '+(state.noteMode?'켬':'끔');
+      render();
+    }
+
+    function checkErrors(){
+      // 단순 검증: 현재 값이 해답과 다르면 error 표시 (render에서 처리)
+      render();
+      flash('오류를 표시했어요');
+    }
+
+    function showSolution(){
+      state.puzzle=state.solved.slice();
+      for(let i=0;i<81;i++) state.fixed[i]=true;
+      saveLocal();
+      render();
+      stopTimer();
+    }
+
+    function resetBoard(){
+      for(let i=0;i<81;i++) if(!state.fixed[i]){ state.puzzle[i]=0; state.notes[i].clear(); }
+      saveLocal();
+      render();
+    }
+
+    function newGame(level='easy'){
+      const solved=generateSolvedGrid();
+      const target=DIFF[level]||DIFF.easy;
+      const puzzle=makePuzzleFromSolved(solved, target);
+      state.solved=solved; state.puzzle=puzzle; state.fixed=puzzle.map(v=>v!==0); state.notes=state.notes.map(()=>new Set());
+      statLevel.textContent = levelEl.options[levelEl.selectedIndex]?.textContent || '쉬움';
+      saveLocal();
+      render();
+      startTimer();
+    }
+
+    // ===== Timer =====
+    function startTimer(){ state.startTs=Date.now(); if(state.timerId) clearInterval(state.timerId); state.timerId=setInterval(updateTimer, 1000); updateTimer(); }
+    function stopTimer(){ if(state.timerId) clearInterval(state.timerId); state.timerId=null; }
+    function updateTimer(){ if(!state.startTs) return; const s=Math.floor((Date.now()-state.startTs)/1000); const mm=String(Math.floor(s/60)).padStart(2,'0'); const ss=String(s%60).padStart(2,'0'); statTimer.textContent=mm+':'+ss; }
+
+    // ===== LocalStorage (resume) =====
+    function saveLocal(){ try{ localStorage.setItem('sudoku_state', JSON.stringify({ ...state, notes: state.notes.map(set=>[...set]) })); }catch(e){} }
+    function loadLocal(){ try{ const raw=localStorage.getItem('sudoku_state'); if(!raw) return false; const obj=JSON.parse(raw); state.fixed=obj.fixed; state.puzzle=obj.puzzle; state.solved=obj.solved; state.noteMode=obj.noteMode; state.notes=obj.notes.map(list=>new Set(list)); return true; }catch(e){ return false; } }
+
+    // ===== Flash message =====
+    function flash(msg){ const el=document.createElement('div'); el.textContent=msg; Object.assign(el.style,{ position:'fixed', left:'50%', top:'20px', transform:'translateX(-50%)', background:'rgba(14,165,233,.95)', color:'#001730', padding:'10px 14px', borderRadius:'10px', fontWeight:'800', zIndex:9999, boxShadow:'0 10px 30px rgba(14,165,233,.5)'}); document.body.appendChild(el); setTimeout(()=>{ el.style.transition='all .4s'; el.style.opacity='0'; el.style.transform='translateX(-50%) translateY(-6px)'; setTimeout(()=>el.remove(), 400); }, 1100); }
+
+    // ===== Boot =====
+    document.getElementById('year').textContent=new Date().getFullYear();
+    if(!loadLocal()){ newGame('easy'); } else { render(); startTimer(); }
+  </script></body>
+</html>
