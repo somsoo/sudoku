@@ -3,88 +3,114 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sudoku — 즐겨요 원페이지</title>
-  <meta name="description" content="깔끔한 원페이지 스도쿠. 유일해답 보장 생성기 탑재. 난이도별 퍼즐, 타이머, 오류 체크, 해답 보기, 공유까지!" />
+  <title>SUDOKU 스도쿠</title>
+
+  <!-- Basic SEO -->
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://sudoku.enjoy-onepage.com/" />
+  <meta name="author" content="Sudoku 원페이지" />
+  <meta name="description" content="깔끔한 원페이지 스도쿠! 유일해답 보장 퍼즐 생성기 · 난이도별 퍼즐 · 오류 체크 · 해답 보기 · 공유 기능 제공" />
   <meta name="theme-color" content="#38bdf8" />
+
+  <!-- Open Graph / Kakao & Facebook preview -->
+  <meta property="og:locale" content="ko_KR" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="SUDOKU 스도쿠 — 즐겨요 원페이지" />
+  <meta property="og:description" content="깔끔한 원페이지 스도쿠! 유일해답 보장 퍼즐 생성기 · 난이도별 퍼즐 · 오류 체크 · 해답 보기 · 공유 기능 제공" />
+  <meta property="og:url" content="https://sudoku.enjoy-onepage.com/" />
+  <meta property="og:image" content="https://sudoku.enjoy-onepage.com/og-image.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SUDOKU 스도쿠 — 즐겨요 원페이지" />
+  <meta name="twitter:description" content="깔끔한 원페이지 스도쿠! 난이도별 퍼즐, 오류 체크, 공유 기능 제공" />
+  <meta name="twitter:image" content="https://sudoku.enjoy-onepage.com/og-image.png" />
+
+  <!-- Icons (권장 구성) -->
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=2">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" sizes="180x180">
+
+  <!-- Adsense (네 계정 값 사용) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2228289204702106" crossorigin="anonymous"></script>
+
   <style>
     :root{
-      --brand:#38bdf8;
-      --ink:#0f172a;
-      --muted:#64748b;
-      --bg:#f8fafc;
-      --card:#ffffff;
-      --grid:#1e293b;
-      --cell:#e2e8f0;
-      --accent:#a7f3d0;
-      --error:#fecaca;
-      --focus:#bae6fd;
-      --radius:16px;
+      --brand:#38bdf8; --ink:#0f172a; --muted:#64748b; --bg:#f8fafc; --card:#ffffff;
+      --grid:#1e293b; --error:#fecaca; --focus:#bae6fd; --radius:16px;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR","Apple SD Gothic Neo",Arial}
-    a{color:inherit}
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+      font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR","Apple SD Gothic Neo",Arial}
     .container{max-width:980px;margin:0 auto;padding:16px}
+
     /* header */
-    .header{background:var(--brand);color:#fff;border-radius:var(--radius);padding:18px}
-    .header h1{margin:0;font-size:1.6rem;line-height:1.2;font-weight:800}
+    .header{background:var(--brand);color:#fff;border-radius:var(--radius);padding:18px; position:relative}
+    .header h1{margin:0;font-size:1.6rem;line-height:1.2;font-weight:900;letter-spacing:.02em}
     .header-sub{margin-top:6px;color:#e0f2fe;font-size:.95rem}
-    .header-buttons{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+    .header-buttons{margin-top:12px;display:flex;gap:8px;flex-wrap:nowrap}
     .btn{
-      border:0;border-radius:999px;padding:10px 14px;font-weight:700;
+      border:0;border-radius:999px;padding:10px 14px;font-weight:700;white-space:nowrap;
       background:#fff;color:#0369a1;box-shadow:0 1px 0 rgba(0,0,0,.06);cursor:pointer
     }
     .btn.secondary{background:#e2f3ff;color:#075985}
     .btn.ghost{background:#ffffffd9}
-    .controls{
-      margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center
+
+    /* small share menu */
+    .share-menu-wrap{position:relative}
+    .share-menu{
+      position:absolute; top:105%; left:0; background:#fff; border:1px solid #e2e8f0; border-radius:12px;
+      box-shadow:0 8px 24px rgba(2,6,23,.15); padding:6px; display:none; z-index:20; min-width:160px;
     }
-    select, .btn.control{
+    .share-menu button{display:block; width:100%; text-align:left; border-radius:10px; border:0; padding:10px 12px; background:#fff; cursor:pointer}
+    .share-menu button:hover{background:#f1f5f9}
+
+    /* top controls: only difficulty */
+    .controls{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .controls label{font-weight:700}
+    select{
       border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;background:#fff;font-weight:600
     }
-    .wrap{
-      display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px
-    }
-    .board-card, .info-card{
-      background:var(--card);border-radius:var(--radius);padding:12px;box-shadow:0 2px 10px rgba(2,6,23,.06)
-    }
+
+    /* action buttons: 2x2 grid */
+    .actions{margin-top:8px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .btn.control{border:1px solid #cbd5e1;background:#fff;color:#075985;border-radius:10px;width:100%}
+
+    .wrap{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+    .board-card,.info-card{background:var(--card);border-radius:var(--radius);padding:12px;box-shadow:0 2px 10px rgba(2,6,23,.06)}
+
     /* board */
-    .board{
-      width:min(92vw,520px);aspect-ratio:1;margin:8px auto;border:3px solid var(--grid);border-radius:10px;display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);overflow:hidden;background:#fff
-    }
-    .cell{
-      border:1px solid #cbd5e1;display:flex;align-items:center;justify-content:center;
-      font-weight:800;font-size:1.2rem;user-select:none
-    }
+    .board{width:min(92vw,520px);aspect-ratio:1;margin:8px auto;border:3px solid var(--grid);
+      border-radius:10px;display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);overflow:hidden;background:#fff}
+    .cell{border:1px solid #cbd5e1;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;user-select:none}
     .cell.given{background:#f1f5f9;color:#0f172a}
     .cell.editable{cursor:pointer}
     .cell.selected{outline:3px solid var(--focus);z-index:2;position:relative}
     .cell.same{background:#eaf6ff}
     .cell.error{background:var(--error)}
-    /* thick box borders */
-    .cell[data-r="0"], .cell[data-r="3"], .cell[data-r="6"]{border-top:3px solid var(--grid)}
-    .cell[data-c="0"], .cell[data-c="3"], .cell[data-c="6"]{border-left:3px solid var(--grid)}
+    .cell[data-r="0"],.cell[data-r="3"],.cell[data-r="6"]{border-top:3px solid var(--grid)}
+    .cell[data-c="0"],.cell[data-c="3"],.cell[data-c="6"]{border-left:3px solid var(--grid)}
     .cell[data-r="8"]{border-bottom:3px solid var(--grid)}
     .cell[data-c="8"]{border-right:3px solid var(--grid)}
 
-    /* number pad */
+    /* number pad (2행: 5 + 4) */
     .pad{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:520px;margin:10px auto 0}
-    .pad button{
-      padding:14px 0;border-radius:14px;border:1px solid #cbd5e1;background:#fff;font-weight:900;font-size:1.15rem;cursor:pointer
-    }
-    .pad button:active{transform:translateY(1px)}
+    .pad button{padding:14px 0;border-radius:14px;border:1px solid #cbd5e1;background:#fff;font-weight:900;font-size:1.15rem;cursor:pointer}
     .pad .erase{grid-column:span 2}
+    .pad button:active{transform:translateY(1px)}
 
-    /* info */
+    /* info tiles */
     .info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
     .tile{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center}
     .tile .k{color:var(--muted);font-size:.9rem}
     .tile .v{font-size:1.15rem;font-weight:900;margin-top:6px}
 
     /* responsive */
-    @media (max-width: 600px){
+    @media (max-width:600px){
       html{font-size:18px}
       .header h1{font-size:1.35rem}
-      .btn, select, .btn.control{font-size:1rem}
+      .btn,select,.btn.control{font-size:1rem}
       .pad button{font-size:1.25rem;padding:16px 0}
       .info{grid-template-columns:repeat(2,1fr)}
     }
@@ -93,22 +119,44 @@
 <body>
   <div class="container">
     <header class="header">
-      <h1>Sudoku — 즐겨요 원페이지</h1>
+      <h1>SUDOKU 스도쿠</h1>
       <div class="header-sub">깔끔한 스도쿠 · 유일해답 보장 생성기 · 오프라인에서도 부드럽게</div>
+
+      <!-- 버튼 2개 유지: 공유(내부에서 카톡/시스템 선택) + URL 복사 -->
       <div class="header-buttons">
-        <button class="btn" id="btn-home" onclick="location.href='/'">홈</button>
-        <button class="btn secondary" id="btn-share">문제 공유하기</button>
+        <div class="share-menu-wrap">
+          <button class="btn secondary" id="btn-share-open">공유</button>
+          <div id="share-menu" class="share-menu" aria-label="공유 옵션">
+            <button id="btn-kakao">카카오톡 공유</button>
+            <button id="btn-system">시스템 공유</button>
+          </div>
+        </div>
         <button class="btn ghost" id="btn-copy">URL 복사</button>
       </div>
     </header>
 
+    <!-- 상단 광고 (slot: 7464033680) -->
+    <ins class="adsbygoogle"
+         style="display:block; text-align:center; margin:10px auto; width:100%;"
+         data-ad-client="ca-pub-2228289204702106"
+         data-ad-slot="7464033680"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>try{(adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}</script>
+
+    <!-- 난이도 선택 행 -->
     <section class="controls">
-      <label for="difficulty" style="font-weight:700">난이도</label>
+      <label for="difficulty">난이도</label>
       <select id="difficulty" title="난이도">
         <option value="easy">쉬움</option>
         <option value="normal" selected>보통</option>
         <option value="hard">어려움</option>
       </select>
+      <strong id="info-diff" style="margin-left:4px;color:#0f172a">보통</strong>
+    </section>
+
+    <!-- 액션 버튼 2행(2x2) -->
+    <section class="actions">
       <button class="btn control" id="btn-new">새 퍼즐</button>
       <button class="btn control" id="btn-check">오류 체크</button>
       <button class="btn control" id="btn-solve">해답 보기</button>
@@ -118,66 +166,77 @@
     <div class="wrap">
       <div class="board-card">
         <div id="board" class="board" aria-label="스도쿠 보드"></div>
-        <div id="pad" class="pad" aria-label="숫자 패드">
-          <!-- 1~9 + 지우기 -->
-        </div>
+        <div id="pad" class="pad" aria-label="숫자 패드"></div>
       </div>
+
+      <!-- 본문 광고 (slot: 6150952012) -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; margin:8px auto; max-width:520px"
+           data-ad-client="ca-pub-2228289204702106"
+           data-ad-slot="6150952012"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>try{(adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}</script>
 
       <div class="info-card">
         <div class="info">
-          <div class="tile"><div class="k">난이도</div><div class="v" id="info-diff">보통</div></div>
           <div class="tile"><div class="k">타이머</div><div class="v" id="info-time">00:00</div></div>
           <div class="tile"><div class="k">남은 칸</div><div class="v" id="info-empty">0</div></div>
           <div class="tile"><div class="k">오류 수</div><div class="v" id="info-errors">0</div></div>
+          <div class="tile"><div class="k">상태</div><div class="v" id="info-state">진행 중</div></div>
         </div>
       </div>
-    </div>
 
-    <p style="color:var(--muted);margin-top:14px;text-align:center">
-      같은 행, 같은 열, 같은 3×3 상자에는 1~9가 한 번씩만 들어갑니다. 연필모드 없이도 숫자패드로 빠르게 입력할 수 있어요.
-    </p>
+      <!-- 하단 광고 (slot: 3524788673) -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; margin:8px auto; width:100%"
+           data-ad-client="ca-pub-2228289204702106"
+           data-ad-slot="3524788673"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>try{(adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}</script>
+    </div>
 
     <p style="color:#94a3b8;text-align:center;margin:24px 0 8px">© 2025 sudoku.enjoy-onepage.com</p>
   </div>
 
   <script>
-    /*************** 유틸 ***************/
-    const rand = (a,b)=>Math.floor(Math.random()*(b-a+1))+a;
-    const shuffle = arr => {for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
-    const deepCopy = b => b.map(r=>r.slice());
+    /* ========= 설정 ========= */
+    const KAKAO_APP_KEY = 'b157f51afb710d60c8b6bec3dc9a2d1f'; // ← 네 키 적용
 
-    /*************** 전역 상태 ***************/
-    let solution = [...Array(9)].map(()=>Array(9).fill(0));
-    let puzzle   = [...Array(9)].map(()=>Array(9).fill(0));
-    let state    = [...Array(9)].map(()=>Array(9).fill(0)); // 진행중 보드
-    let given    = [...Array(9)].map(()=>Array(9).fill(false));
-    let selected = {r:null,c:null};
-    let timer=0,timerId=null, mistakes=0;
+    /* ========= 유틸 ========= */
+    const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+    const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+    const deepCopy=b=>b.map(r=>r.slice());
 
-    /*************** 보드 DOM 생성 ***************/
-    const boardEl = document.getElementById('board');
+    /* ========= 상태 ========= */
+    let solution=[...Array(9)].map(()=>Array(9).fill(0));
+    let puzzle=[...Array(9)].map(()=>Array(9).fill(0));
+    let state=[...Array(9)].map(()=>Array(9).fill(0));
+    let given=[...Array(9)].map(()=>Array(9).fill(false));
+    let selected={r:null,c:null};
+    let timer=0,timerId=null,mistakes=0;
+
+    /* ========= 보드 DOM ========= */
+    const boardEl=document.getElementById('board');
     function buildBoard(){
       boardEl.innerHTML='';
       for(let r=0;r<9;r++){
         for(let c=0;c<9;c++){
-          const div=document.createElement('div');
-          div.className='cell';
-          div.dataset.r=r; div.dataset.c=c;
-          div.addEventListener('click',()=>selectCell(r,c));
-          boardEl.appendChild(div);
+          const d=document.createElement('div');
+          d.className='cell'; d.dataset.r=r; d.dataset.c=c;
+          d.addEventListener('click',()=>selectCell(r,c));
+          boardEl.appendChild(d);
         }
       }
     }
-
     function renderBoard(){
       let empty=0;
       [...boardEl.children].forEach(cell=>{
-        const r=+cell.dataset.r, c=+cell.dataset.c;
-        const v=state[r][c];
-        cell.textContent = v? v : '';
+        const r=+cell.dataset.r,c=+cell.dataset.c,v=state[r][c];
+        cell.textContent=v? v:'';
         cell.classList.remove('given','editable','selected','same','error');
-        if(given[r][c]) cell.classList.add('given');
-        else cell.classList.add('editable');
+        if(given[r][c]) cell.classList.add('given'); else cell.classList.add('editable');
         if(selected.r===r && selected.c===c) cell.classList.add('selected');
         if(v && selected.r!==null && state[selected.r][selected.c]===v) cell.classList.add('same');
         if(!v) empty++;
@@ -185,266 +244,219 @@
       document.getElementById('info-empty').textContent=empty;
       document.getElementById('info-errors').textContent=mistakes;
     }
+    function selectCell(r,c){ if(given[r][c]) return; selected={r,c}; renderBoard(); }
 
-    function selectCell(r,c){
-      if(given[r][c]) return;
-      selected={r,c};
-      renderBoard();
-    }
-
-    /*************** 숫자 패드 ***************/
+    /* ========= 숫자패드 ========= */
     const padEl=document.getElementById('pad');
     function buildPad(){
       padEl.innerHTML='';
       for(let n=1;n<=9;n++){
-        const b=document.createElement('button');
-        b.textContent=n;
-        b.addEventListener('click',()=>place(n));
+        const b=document.createElement('button'); b.textContent=n; b.addEventListener('click',()=>place(n));
         padEl.appendChild(b);
       }
-      const erase=document.createElement('button');
-      erase.textContent='지우기';
-      erase.className='erase';
-      erase.addEventListener('click',()=>place(0));
-      padEl.appendChild(erase);
+      const e=document.createElement('button'); e.textContent='지우기'; e.className='erase'; e.addEventListener('click',()=>place(0));
+      padEl.appendChild(e);
     }
-
     function place(n){
-      const {r,c}=selected;
-      if(r===null) return;
-      if(given[r][c]) return;
-      state[r][c]=n||0;
-      renderBoard();
-      checkWin();
+      const {r,c}=selected; if(r===null||given[r][c]) return;
+      state[r][c]=n||0; renderBoard(); checkWin();
     }
 
-    /*************** 타이머 ***************/
-    function startTimer(){
-      stopTimer();
-      timer=0;
-      timerId=setInterval(()=>{
-        timer++;
-        const m=String(Math.floor(timer/60)).padStart(2,'0');
-        const s=String(timer%60).padStart(2,'0');
-        document.getElementById('info-time').textContent=`${m}:${s}`;
-      },1000);
-    }
-    function stopTimer(){ if(timerId){clearInterval(timerId);timerId=null} }
+    /* ========= 타이머 ========= */
+    function startTimer(){ stopTimer(); timer=0;
+      timerId=setInterval(()=>{timer++;const m=String(Math.floor(timer/60)).padStart(2,'0');const s=String(timer%60).padStart(2,'0');
+        document.getElementById('info-time').textContent=`${m}:${s}`;},1000);}
+    function stopTimer(){ if(timerId){clearInterval(timerId); timerId=null;} }
 
-    /*************** 스도쿠 생성/해결 ***************/
-    function solveCount(board, limit=2){
-      // 해답 개수 카운트(유일해답 검증용)
-      let count=0;
-      function helper(b){
-        if(count>=limit) return;
-        let r=-1,c=-1;
-        outer: for(let i=0;i<9;i++)for(let j=0;j<9;j++)if(b[i][j]===0){r=i;c=j;break outer;}
-        if(r===-1){count++;return;}
-        const nums=shuffle([1,2,3,4,5,6,7,8,9]);
-        for(const v of nums){
-          if(valid(b,r,c,v)){
-            b[r][c]=v;
-            helper(b);
-            b[r][c]=0;
-            if(count>=limit) return;
-          }
-        }
-      }
-      helper(deepCopy(board));
-      return count;
-    }
-
+    /* ========= 스도쿠 로직 ========= */
     function valid(b,r,c,v){
       for(let i=0;i<9;i++){ if(b[r][i]===v||b[i][c]===v) return false; }
       const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
       for(let i=0;i<3;i++)for(let j=0;j<3;j++) if(b[br+i][bc+j]===v) return false;
       return true;
     }
-
+    function solveCount(board,limit=2){
+      let cnt=0;
+      function dfs(b){
+        if(cnt>=limit) return;
+        let r=-1,c=-1;
+        outer: for(let i=0;i<9;i++)for(let j=0;j<9;j++)if(b[i][j]===0){r=i;c=j;break outer;}
+        if(r===-1){cnt++;return;}
+        const nums=shuffle([1,2,3,4,5,6,7,8,9]);
+        for(const v of nums){ if(valid(b,r,c,v)){ b[r][c]=v; dfs(b); b[r][c]=0; if(cnt>=limit) return; } }
+      }
+      dfs(deepCopy(board)); return cnt;
+    }
     function generateFull(){
       const b=[...Array(9)].map(()=>Array(9).fill(0));
-      const rows=[0,1,2,3,4,5,6,7,8], cols=[0,1,2,3,4,5,6,7,8];
-      function fillCell(idx=0){
+      function fill(idx=0){
         if(idx===81) return true;
-        const r=Math.floor(idx/9), c=idx%9;
-        const nums=shuffle([1,2,3,4,5,6,7,8,9]);
-        for(const v of nums){
-          if(valid(b,r,c,v)){ b[r][c]=v; if(fillCell(idx+1)) return true; b[r][c]=0; }
-        }
+        const r=Math.floor(idx/9),c=idx%9,nums=shuffle([1,2,3,4,5,6,7,8,9]);
+        for(const v of nums){ if(valid(b,r,c,v)){ b[r][c]=v; if(fill(idx+1)) return true; b[r][c]=0; } }
         return false;
       }
-      fillCell(0);
-      return b;
+      fill(0); return b;
     }
-
-    function makePuzzle(full, difficulty='normal'){
-      // 제거할 칸 수: 쉬움 40~46, 보통 47~53, 어려움 54~60 (빈칸 기준)
-      const removeMap={
-        easy:[40,46], normal:[47,53], hard:[54,60]
-      };
-      const [lo,hi]=removeMap[difficulty]||removeMap.normal;
-      const holes=rand(lo,hi);
-      const p=deepCopy(full);
-      let positions=[];
-      for(let r=0;r<9;r++)for(let c=0;c<9;c++) positions.push([r,c]);
-      shuffle(positions);
-      let removed=0;
-      for(const [r,c] of positions){
-        const backup=p[r][c];
-        p[r][c]=0;
-        // 유일해답 유지 여부 확인
-        if(solveCount(p,2)!==1){
-          p[r][c]=backup; // 되돌림
-          continue;
-        }
-        removed++;
-        if(removed>=holes) break;
+    function makePuzzle(full,diff='normal'){
+      const ranges={easy:[40,46],normal:[47,53],hard:[54,60]};
+      const [lo,hi]=ranges[diff]||ranges.normal, holes=rand(lo,hi);
+      const p=deepCopy(full); const pos=[]; for(let r=0;r<9;r++)for(let c=0;c<9;c++) pos.push([r,c]);
+      shuffle(pos); let removed=0;
+      for(const [r,c] of pos){
+        const bak=p[r][c]; p[r][c]=0;
+        if(solveCount(p,2)!==1){ p[r][c]=bak; continue; }
+        removed++; if(removed>=holes) break;
       }
       return p;
     }
 
-    /*************** 검증/상태 ***************/
     function highlightErrors(){
       let errors=0;
       [...boardEl.children].forEach(cell=>{
         cell.classList.remove('error');
-        const r=+cell.dataset.r, c=+cell.dataset.c;
-        const v=state[r][c];
-        if(!v) return;
-        // row
-        for(let cc=0;cc<9;cc++){
-          if(cc!==c && state[r][cc]===v){cell.classList.add('error');errors++;break;}
-        }
-        // col
-        for(let rr=0;rr<9;rr++){
-          if(rr!==r && state[rr][c]===v){cell.classList.add('error');errors++;break;}
-        }
-        // box
-        const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
-        for(let i=0;i<3;i++)for(let j=0;j<3;j++){
-          const rr=br+i, cc=bc+j;
-          if(!(rr===r&&cc===c) && state[rr][cc]===v){cell.classList.add('error');errors++;i=3;j=3;}
-        }
+        const r=+cell.dataset.r,c=+cell.dataset.c,v=state[r][c]; if(!v) return;
+        for(let cc=0;cc<9;cc++){ if(cc!==c && state[r][cc]===v){cell.classList.add('error');errors++;break;} }
+        for(let rr=0;rr<9;rr++){ if(rr!==r && state[rr][c]===v){cell.classList.add('error');errors++;break;} }
+        const br=Math.floor(r/3)*3,bc=Math.floor(c/3)*3;
+        for(let i=0;i<3;i++)for(let j=0;j<3;j++){const rr=br+i,cc=bc+j;if(!(rr===r&&cc===c)&&state[rr][cc]===v){cell.classList.add('error');errors++;i=3;j=3;}}
       });
-      mistakes=errors;
-      document.getElementById('info-errors').textContent=mistakes;
+      mistakes=errors; document.getElementById('info-errors').textContent=mistakes;
     }
-
     function checkWin(){
-      // 모두 채웠고 오류 없음
-      for(let r=0;r<9;r++)for(let c=0;c<9;c++){
-        if(state[r][c]===0) return;
-        if(state[r][c]!==solution[r][c]) return;
-      }
-      stopTimer();
-      setTimeout(()=>alert('🎉 클리어! 멋져요!'),50);
+      for(let r=0;r<9;r++)for(let c=0;c<9;c++){ if(state[r][c]===0) return; if(state[r][c]!==solution[r][c]) return; }
+      stopTimer(); document.getElementById('info-state').textContent='클리어! 🎉'; setTimeout(()=>alert('🎉 클리어! 멋져요!'),60);
     }
 
-    /*************** 퍼즐 로딩/초기화 ***************/
-    function loadFromShare(urlStr){
+    /* ========= 공유 인코딩 ========= */
+    function encode(b){return b.flat().join('')}
+    function decode(s){const a=[...s].map(ch=>parseInt(ch,10));const b=[...Array(9)].map(()=>Array(9).fill(0));
+      for(let i=0;i<81;i++) b[Math.floor(i/9)][i%9]=a[i]||0; return b;}
+    function makeShareURL(){
+      const u=new URL(location.href);
+      u.searchParams.set('p',encode(puzzle));
+      u.searchParams.set('s',encode(solution));
+      u.searchParams.set('d',document.getElementById('difficulty').value);
+      return u.toString();
+    }
+    function loadFromShare(u){
       try{
-        const url=new URL(urlStr);
-        const qp=url.searchParams;
-        if(!qp.has('p')||!qp.has('s')) return false;
-        const p=decode(qp.get('p'));
-        const s=decode(qp.get('s'));
-        puzzle=p; solution=s;
+        const url=new URL(u);
+        const p=url.searchParams.get('p'); const s=url.searchParams.get('s'); const d=url.searchParams.get('d')||'normal';
+        if(!p||!s) return false;
+        const puz=decode(p); const sol=decode(s);
+        // 간단 검증
+        if(puz.length!==9||sol.length!==9) return false;
+        puzzle=deepCopy(puz); solution=deepCopy(sol); state=deepCopy(puz);
         given=[...Array(9)].map(()=>Array(9).fill(false));
-        for(let r=0;r<9;r++)for(let c=0;c<9;c++){
-          given[r][c]=puzzle[r][c]!==0;
-        }
-        state=deepCopy(puzzle);
+        for(let r=0;r<9;r++)for(let c=0;c<9;c++) given[r][c]=puzzle[r][c]!==0;
+        document.getElementById('difficulty').value=d;
+        document.getElementById('info-diff').textContent=(d==='easy'?'쉬움':d==='hard'?'어려움':'보통');
         return true;
-      }catch{ return false; }
+      }catch(e){ return false; }
     }
 
+    /* ========= 카카오 SDK 지연 로드 & 공유 ========= */
+    let kakaoLoaded=false;
+    function loadKakaoSDK(){
+      return new Promise((resolve,reject)=>{
+        if(kakaoLoaded || window.Kakao){kakaoLoaded=true; return resolve();}
+        const s=document.createElement('script');
+        s.src='https://developers.kakao.com/sdk/js/kakao.js';
+        s.onload=()=>{kakaoLoaded=true; resolve();};
+        s.onerror=reject;
+        document.head.appendChild(s);
+      });
+    }
+    async function shareSystem(){
+      const url = makeShareURL();
+      if(navigator.share){
+        try{ await navigator.share({title:'스도쿠 퍼즐', text:'같이 풀어봐요!', url}); }
+        catch(e){}
+      }else{
+        await navigator.clipboard.writeText(url);
+        alert('공유 링크를 클립보드에 복사했어요!');
+      }
+      hideShareMenu();
+    }
+    async function shareKakao(){
+      try{
+        await loadKakaoSDK();
+        if(!window.Kakao) throw new Error('Kakao SDK not available');
+        if(!Kakao.isInitialized()){
+          if(!KAKAO_APP_KEY) throw new Error('카카오 앱키를 설정하세요.');
+          Kakao.init(KAKAO_APP_KEY);
+        }
+        const url = makeShareURL();
+        Kakao.Share.sendDefault({
+          objectType: "feed",
+          content: {
+            title: "SUDOKU 스도쿠 퍼즐",
+            description: "깔끔한 원페이지 스도쿠, 지금 풀어보세요!",
+            imageUrl: "https://sudoku.enjoy-onepage.com/og-image.png",
+            link: { mobileWebUrl: url, webUrl: url }
+          },
+          buttons: [
+            { title: "지금 풀기", link: { mobileWebUrl: url, webUrl: url } }
+          ]
+        });
+      }catch(e){
+        // 문제가 있으면 시스템 공유로 폴백
+        await shareSystem();
+      }
+      hideShareMenu();
+    }
+
+    /* ========= 새게임/초기화 ========= */
     function newGame(diff){
-      document.getElementById('info-diff').textContent=
-        diff==='easy'?'쉬움':diff==='hard'?'어려움':'보통';
-      const full=generateFull();
-      const puz=makePuzzle(full,diff);
+      document.getElementById('info-diff').textContent=diff==='easy'?'쉬움':diff==='hard'?'어려움':'보통';
+      const full=generateFull(); const puz=makePuzzle(full,diff);
       solution=full; puzzle=puz; state=deepCopy(puz);
       given=[...Array(9)].map(()=>Array(9).fill(false));
       for(let r=0;r<9;r++)for(let c=0;c<9;c++) given[r][c]=puzzle[r][c]!==0;
-      selected={r:null,c:null}; mistakes=0;
-      startTimer(); renderBoard();
-      history.replaceState({},'',makeShareURL()); // URL 갱신
-    }
-
-    /*************** 공유 ***************/
-    function encode(board){
-      // 0-9를 base10 문자열로 81자리
-      return board.flat().join('');
-    }
-    function decode(str){
-      const arr=[...str].map(ch=>parseInt(ch,10));
-      const b=[...Array(9)].map(()=>Array(9).fill(0));
-      for(let i=0;i<81;i++){ b[Math.floor(i/9)][i%9]=arr[i]||0; }
-      return b;
-    }
-    function makeShareURL(){
-      const url=new URL(location.href);
-      url.searchParams.set('p',encode(puzzle));
-      url.searchParams.set('s',encode(solution));
-      return url.toString();
-    }
-    async function sharePuzzle(){
-      const shareData={
-        title:'스도쿠 퍼즐',
-        text:'같이 풀어봐요! 아래 링크로 열 수 있어요.',
-        url: makeShareURL()
-      };
-      if(navigator.share){
-        try{ await navigator.share(shareData);} catch{}
-      }else{
-        await navigator.clipboard.writeText(shareData.url);
-        alert('공유 링크를 클립보드에 복사했어요!');
-      }
-    }
-
-    /*************** 이벤트 바인딩 ***************/
-    document.getElementById('btn-new').addEventListener('click',()=>{
-      newGame(document.getElementById('difficulty').value);
-    });
-    document.getElementById('btn-check').addEventListener('click',highlightErrors);
-    document.getElementById('btn-solve').addEventListener('click',()=>{
-      state=deepCopy(solution); renderBoard(); highlightErrors(); checkWin();
-    });
-    document.getElementById('btn-reset').addEventListener('click',()=>{
-      state=deepCopy(puzzle); mistakes=0; renderBoard(); highlightErrors();
-    });
-    document.getElementById('btn-share').addEventListener('click',sharePuzzle);
-    document.getElementById('btn-copy').addEventListener('click',async()=>{
-      await navigator.clipboard.writeText(makeShareURL());
-      alert('현재 퍼즐 URL을 복사했어요!');
-    });
-    document.getElementById('difficulty').addEventListener('change', (e)=>{
-      // ✅ 난이도 바꾸면 자동 새 퍼즐
-      newGame(e.target.value);
-    });
-
-    /*************** 초기 구동 ***************/
-    buildBoard(); buildPad();
-    // 공유 링크로 들어온 경우 그 퍼즐 로드
-    if(!loadFromShare(location.href)){
-      newGame('normal');
-    }else{
+      selected={r:null,c:null}; mistakes=0; document.getElementById('info-state').textContent='진행 중';
       startTimer(); renderBoard(); history.replaceState({},'',makeShareURL());
-      document.getElementById('info-diff').textContent='공유 퍼즐';
+      try{ (adsbygoogle = window.adsbygoogle || []).push({}); }catch(_){}
     }
 
-    // 키보드 입력 지원(PC)
+    /* ========= 이벤트 ========= */
+    // 헤더 공유 메뉴
+    const shareBtn = document.getElementById('btn-share-open');
+    const shareMenu = document.getElementById('share-menu');
+    function hideShareMenu(){ shareMenu.style.display='none'; }
+    function toggleShareMenu(){ shareMenu.style.display = (shareMenu.style.display==='block' ? 'none' : 'block'); }
+    shareBtn.addEventListener('click',toggleShareMenu);
+    document.getElementById('btn-kakao').addEventListener('click',shareKakao);
+    document.getElementById('btn-system').addEventListener('click',shareSystem);
+    document.addEventListener('click',e=>{ if(!e.target.closest('.share-menu-wrap')) hideShareMenu(); });
+
+    document.getElementById('btn-new').addEventListener('click',()=>newGame(document.getElementById('difficulty').value));
+    document.getElementById('btn-check').addEventListener('click',highlightErrors);
+    document.getElementById('btn-solve').addEventListener('click',()=>{state=deepCopy(solution); renderBoard(); highlightErrors(); checkWin();});
+    document.getElementById('btn-reset').addEventListener('click',()=>{state=deepCopy(puzzle); mistakes=0; renderBoard(); highlightErrors(); document.getElementById('info-state').textContent='진행 중';});
+    document.getElementById('btn-copy').addEventListener('click',async()=>{await navigator.clipboard.writeText(makeShareURL()); alert('현재 퍼즐 URL을 복사했어요!');});
+    document.getElementById('difficulty').addEventListener('change',e=>newGame(e.target.value));
+
+    /* ========= 초기 구동 ========= */
+    buildBoard(); buildPad();
+    if(!loadFromShare(location.href)){ newGame('normal'); }
+    else{
+      startTimer(); renderBoard();
+      history.replaceState({},'',makeShareURL());
+      document.getElementById('info-diff').textContent=
+        (document.getElementById('difficulty').value==='easy'?'쉬움':
+         document.getElementById('difficulty').value==='hard'?'어려움':'보통');
+    }
+
+    /* PC 키보드 */
     document.addEventListener('keydown',e=>{
       if(selected.r===null) return;
-      if(e.key>='1' && e.key<='9') place(parseInt(e.key,10));
-      if(e.key==='Backspace' || e.key==='Delete' || e.key==='0') place(0);
+      if(e.key>='1'&&e.key<='9') place(+e.key);
+      if(['Backspace','Delete','0'].includes(e.key)) place(0);
       if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){
-        const dr = e.key==='ArrowUp'?-1 : e.key==='ArrowDown'?+1 : 0;
-        const dc = e.key==='ArrowLeft'?-1 : e.key==='ArrowRight'?+1 : 0;
-        let r=selected.r, c=selected.c;
-        do{
-          r=(r+dr+9)%9; c=(c+dc+9)%9;
-        }while(given[r][c]); // 주어진 칸은 건너뜀
+        const dr=e.key==='ArrowUp'?-1:e.key==='ArrowDown'?1:0;
+        const dc=e.key==='ArrowLeft'?-1:e.key==='ArrowRight'?1:0;
+        let r=selected.r,c=selected.c;
+        do{ r=(r+dr+9)%9; c=(c+dc+9)%9; }while(given[r][c]);
         selectCell(r,c);
       }
     });
