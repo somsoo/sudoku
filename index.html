@@ -2,20 +2,14 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sudoku — 즐겨요 원페이지 | sudoku.enjoy-onepage.com</title>
-  <meta name="description" content="빠르고 깔끔한 스도쿠. 해답 유일성 보장 생성기 탑재. 난이도별 퍼즐, 타이머, 오류 체크, 공유까지 한 페이지로!" />
+  <meta name="description" content="빠르고 깔끔한 스도쿠. 오프라인에서도 부드럽게, 해답 유일성 보장 생성기 탑재. 난이도별 퍼즐, 타이머, 오류 체크, 공유까지 한 페이지로!" />
   <link rel="canonical" href="https://sudoku.enjoy-onepage.com/" />
   <meta name="robots" content="index,follow" />
   <meta name="theme-color" content="#38bdf8" />
 
-  <!-- Favicon & Icons (권장: ICO+PNG 모두) -->
-  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=2">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" sizes="180x180">
-
-  <!-- Open Graph / Kakao / SNS Preview -->
+  <!-- Open Graph / Twitter -->
   <meta property="og:locale" content="ko_KR" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Sudoku — 즐겨요 원페이지" />
@@ -24,150 +18,101 @@
   <meta property="og:url" content="https://sudoku.enjoy-onepage.com/" />
   <meta property="og:image" content="/og-image.png" />
   <meta property="og:image:alt" content="Sudoku one-page preview" />
-
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Sudoku — 원페이지 퍼즐" />
   <meta name="twitter:description" content="난이도별 스도쿠를 한 페이지에서. 해답 유일성 보장, 가벼운 인터페이스." />
   <meta name="twitter:image" content="/og-image.png" />
 
-  <!-- Google AdSense (교체 필요 없음: 제공 값 사용) -->
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+
+  <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2228289204702106" crossorigin="anonymous"></script>
   <!-- Kakao SDK -->
   <script src="https://developers.kakao.com/sdk/js/kakao.min.js" defer></script>
 
   <style>
-    /* ===== Reset & Mobile Text ===== */
     :root{
-      --bg:#f0f9ff; --card:#fff; --muted:#64748b; --fg:#1e293b;
-      --accent:#38bdf8; --accent-2:#22c55e; --danger:#ef4444;
-      --grid:#cbd5e1; --grid-strong:#475569; --cell:#f8fafc;
-      --hl:#eaf6ff; --same:#fff1b9; --sel:#bae6fd;
+      --bg:#f0f9ff;
+      --card:#ffffff;
+      --muted:#64748b;
+      --fg:#1e293b;
+      --accent:#38bdf8;
+      --danger:#ef4444;
+      --grid:#cbd5e1;
+      --grid-strong:#475569;
+      --cell:#f8fafc;
+      --hl:#eaf6ff;
+      --same:#fff1b9;
+      --sel:#bae6fd;
     }
-    *,*::before,*::after{ box-sizing:border-box; }
-    html,body{ height:100% }
-    html{ -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0; color:var(--fg); background:var(--bg);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans KR, Apple SD Gothic Neo, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans KR, Apple SD Gothic Neo, Helvetica, Arial;
       -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-      -webkit-tap-highlight-color: transparent;
+      writing-mode: horizontal-tb;
     }
-    a{ color:inherit; text-decoration:none; }
-    button,select{ font: inherit; color:inherit; }
-    button{ border:0; background:none; }
-    input{ font: inherit; }
+    a{color:inherit}
+    .wrap{max-width:1100px; margin:0 auto; padding:24px;}
 
-    .wrap{ max-width:1100px; margin:0 auto; padding:16px; }
+    header{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px; border-radius:16px; background:#e0f2fe; border:1px solid #bae6fd;}
+    .brand{display:flex; gap:12px; align-items:center}
+    .logo{width:40px; height:40px; border-radius:12px; background:#38bdf8 url('/favicon.png') center/cover no-repeat; box-shadow:0 4px 12px rgba(56,189,248,.35)}
+    .title{display:flex; flex-direction:column}
+    .title h1{font-size:20px; margin:0; color:#0284c7; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .title p{margin:2px 0 0; color:var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
-    /* ===== Header ===== */
-    header{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; padding:12px 16px; border-radius:16px; background:#e0f2fe; border:1px solid #bae6fd;
-    }
-    .brand{ display:flex; gap:10px; align-items:center }
-    .logo{ width:40px; height:40px; border-radius:12px; background:#38bdf8 url('/favicon-32.png') center/cover no-repeat; box-shadow:0 4px 12px rgba(56,189,248,.35) }
-    .title{ display:flex; flex-direction:column; min-width:0 }
-    .title h1{ font-size:18px; margin:0; color:#0284c7; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
-    .title p{ margin:2px 0 0; color:var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+    .share{display:flex; gap:8px; align-items:center}
+    .btn{border:1px solid #bae6fd; background:#f0f9ff; color:var(--fg); padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600; transition:.2s;}
+    .btn:hover{background:#bae6fd}
+    .btn.accent{background:var(--accent); color:white; border-color:transparent}
+    .btn{writing-mode: horizontal-tb !important; white-space:nowrap; word-break:keep-all;}
 
-    .share{ display:flex; gap:8px; align-items:center; flex-wrap:wrap }
-    .btn{
-      border:1px solid #bae6fd; background:#f0f9ff; color:var(--fg);
-      padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700; line-height:1;
-      display:inline-flex; align-items:center; justify-content:center; min-height:36px;
-      transition: background .2s ease;
-    }
-    .btn:hover{ background:#bae6fd }
-    .btn.accent{ background:var(--accent); color:#fff; border-color:transparent }
+    main{display:grid; grid-template-columns: 1fr; gap:16px; margin-top:16px}
+    .ad{display:flex; justify-content:center; align-items:center; background:#e0f2fe; border:1px dashed #bae6fd; border-radius:12px; padding:6px; min-height:0;}
 
-    /* ===== Layout ===== */
-    main{ display:grid; grid-template-columns:1fr; gap:16px; margin-top:12px }
-    .board-wrap{ display:grid; grid-template-columns: 1fr 320px; gap:16px }
-    @media (max-width:1000px){ .board-wrap{ grid-template-columns: 1fr; } }
+    .board-wrap{display:grid; grid-template-columns: 1fr 340px; gap:16px}
+    @media (max-width:980px){ .board-wrap{ grid-template-columns: 1fr; } }
 
-    .card{ background:var(--card); border:1px solid #e2e8f0; border-radius:16px; padding:16px }
+    .card{background:var(--card); border:1px solid #e2e8f0; border-radius:16px; padding:16px}
+    .controls{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px}
+    .controls .btn{height:36px}
+    select{height:36px; border-radius:10px; background:#f0f9ff; border:1px solid #bae6fd; padding:0 10px}
 
-    .ad{
-      display:flex; justify-content:center; align-items:center;
-      background:#e0f2fe; border:1px dashed #bae6fd; border-radius:12px; padding:8px;
-      min-height:60px;
-    }
+    .grid{display:grid; grid-template-columns: repeat(9, 1fr); border:3px solid var(--grid-strong); border-radius:12px; overflow:hidden; width:clamp(320px, 92vw, 520px); margin:12px auto;}
+    .cell{position:relative; border:1px solid var(--grid);}
+    .cell::before{content:""; display:block; padding-bottom:100%;}
+    .cell input{position:absolute; inset:0; width:100%; height:100%; border:0; background:transparent; text-align:center; font-weight:700; font-size:clamp(16px, 3.5vw, 28px); color:var(--fg);}
+    .cell input:disabled{color:#0284c7}
 
-    .controls{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px }
-    .controls .btn{ height:36px; padding:8px 12px }
-    select{
-      height:36px; border-radius:10px; background:#f0f9ff; color:var(--fg);
-      border:1px solid #bae6fd; padding:0 10px; min-width:100px;
-    }
+    .stats{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+    .stat{background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px}
+    .stat h3{margin:0 0 6px; font-size:12px; color:var(--muted)}
+    .stat p{margin:0; font-size:18px; font-weight:800}
 
-    /* ===== Board (robust) ===== */
-    #grid{
-      --board-max: 520px;
-      width: min(92vw, var(--board-max));
-      margin: 8px auto 6px;
-      display:grid; grid-template-columns: repeat(9, 1fr);
-      border:3px solid var(--grid-strong); border-radius:12px; overflow:hidden;
-      background:#e2e8f0;
-      touch-action: manipulation; /* 모바일 스크롤/줌 오동작 방지 */
-    }
-    .cell{
-      position:relative; background:var(--cell); border:1px solid var(--grid);
-      /* 새 브라우저: */
-      aspect-ratio: 1 / 1;
-    }
-    /* 구형 브라우저 폴백 */
-    .cell::before{ content:""; display:block; padding-bottom:100%; }
-    .cell input{
-      position:absolute; inset:0; width:100%; height:100%;
-      background:transparent; border:0; color:var(--fg);
-      text-align:center; font-weight:800; letter-spacing:.5px;
-      font-size:clamp(18px, 4vw, 28px);
-      outline:none; caret-color:transparent;
-    }
-    .cell input:disabled{ color:#0284c7 }
-    .cell.error input{ color:var(--danger) }
+    .keypad{display:none; grid-template-columns:repeat(10,1fr); gap:8px; margin-top:12px}
+    .keypad .btn{height:44px; font-size:16px; min-width:36px;}
+    @media (max-width:980px){ .keypad{display:grid;} }
+    @media (max-width:480px){ .share{flex-direction:column; align-items:flex-end; gap:6px;} }
 
-    /* 3x3 thick borders (outline illusion) */
-    .cell:nth-child(3n){ border-right:3px solid var(--grid-strong) }
-    .cell:nth-child(9n+1){ border-left:3px solid var(--grid-strong) }
-    .cell:nth-child(n+1):nth-child(-n+9){ border-top:3px solid var(--grid-strong) }
-    .cell:nth-child(n+73):nth-child(-n+81){ border-bottom:3px solid var(--grid-strong) }
-    .cell:nth-child(n+19):nth-child(-n+27),
-    .cell:nth-child(n+46):nth-child(-n+54){ border-bottom:3px solid var(--grid-strong) }
+    footer{margin:24px 0 8px; color:var(--muted); font-size:12px; text-align:center}
+    .links{display:flex; justify-content:center; gap:12px; margin-top:6px}
 
-    /* Highlight */
-    .cell.hl{ background:var(--hl) }
-    .cell.same{ background:var(--same) }
-    .cell.sel{ background:var(--sel); outline:2px solid var(--accent); outline-offset:-2px }
-
-    /* Stats & Help */
-    .stats{ display:grid; grid-template-columns: 1fr 1fr; gap:8px }
-    .stat{ background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px }
-    .stat h3{ margin:0 0 6px; font-size:12px; color:var(--muted) }
-    .stat p{ margin:0; font-size:18px; font-weight:800 }
-
-    /* Mobile keypad (only small screens) */
-    .keypad{ display:none; grid-template-columns:repeat(10,1fr); gap:8px; margin-top:12px }
-    .keypad .btn{ height:44px; font-size:16px; background:#f0f9ff }
-    @media (max-width:1000px){ .keypad{ display:grid } }
-
-    /* Footer */
-    footer{ margin:20px 0 10px; color:var(--muted); font-size:12px; text-align:center }
-    .links{ display:flex; justify-content:center; gap:12px; margin-top:6px }
-
-    /* Win Modal */
-    .modal{ position:fixed; inset:0; display:none; place-items:center; background:rgba(2,6,23,.55); z-index:50 }
-    .modal .box{ background:#fff; border-radius:16px; padding:20px 18px; width:min(92vw, 420px); box-shadow:0 20px 50px rgba(2,6,23,.25) }
-    .modal h2{ margin:0 0 6px; font-size:20px; color:#0f172a }
-    .modal p{ margin:0 0 12px; color:#334155 }
-    .modal .row{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end }
+    .modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(2,6,23,.55); z-index:50}
+    .modal .box{background:#fff; border-radius:16px; padding:20px 18px; width:min(92vw,420px); box-shadow:0 20px 50px rgba(2,6,23,.25)}
+    .modal h2{margin:0 0 6px; font-size:20px; color:#0f172a}
+    .modal p{margin:0 0 12px; color:#334155}
+    .modal .row{display:flex; gap:8px; flex-wrap:wrap}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <header aria-label="사이트 헤더">
+    <header>
       <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
+        <div class="logo"></div>
         <div class="title">
           <h1>Sudoku — 즐겨요 원페이지</h1>
           <p>상큼하고 깔끔한 스도쿠 · 유일해 보장 생성기</p>
@@ -176,26 +121,25 @@
       <div class="share">
         <button class="btn" id="btnShare">공유</button>
         <button class="btn" id="btnKakao">카카오톡 공유</button>
-        <a class="btn accent" href="https://sudoku.enjoy-onepage.com/">홈</a>
+        <a class="btn accent" href="/">홈</a>
       </div>
     </header>
 
-    <!-- Top Leaderboard Ad -->
-    <div class="ad card" aria-label="광고 영역 상단">
+    <!-- 상단 광고 -->
+    <div class="ad card">
       <ins class="adsbygoogle" style="display:block"
            data-ad-client="ca-pub-2228289204702106"
            data-ad-slot="7464033680"
            data-ad-format="auto"
            data-full-width-responsive="true"></ins>
-      <script>try{(adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}</script>
+      <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
     </div>
 
     <main>
       <div class="board-wrap">
         <section class="card">
-          <div class="controls" role="group" aria-label="게임 컨트롤">
-            <label for="level" class="sr-only" style="position:absolute;left:-9999px">난이도</label>
-            <select id="level" aria-label="난이도">
+          <div class="controls">
+            <select id="level">
               <option value="easy">쉬움</option>
               <option value="medium">보통</option>
               <option value="hard">어려움</option>
@@ -207,20 +151,19 @@
             <button class="btn" id="btnNotes">연필 모드: 끔</button>
           </div>
 
-          <!-- In-content Ad -->
-          <div class="ad" aria-label="광고 영역 본문">
+          <!-- 본문 광고 -->
+          <div class="ad">
             <ins class="adsbygoogle" style="display:block"
                  data-ad-client="ca-pub-2228289204702106"
                  data-ad-slot="6150952012"
-                 data-ad-format="rectangle, horizontal"
+                 data-ad-format="rectangle"
                  data-full-width-responsive="true"></ins>
-            <script>try{(adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}</script>
+            <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
           </div>
 
-          <div id="grid" class="grid" aria-label="스도쿠 보드"></div>
+          <div id="grid" class="grid"></div>
 
-          <!-- Mobile keypad -->
-          <div class="keypad" aria-label="숫자 키패드">
+          <div class="keypad">
             <button class="btn" data-key="1">1</button>
             <button class="btn" data-key="2">2</button>
             <button class="btn" data-key="3">3</button>
@@ -235,28 +178,26 @@
         </section>
 
         <aside class="side">
-          <section class="card stats" aria-label="상태 표시">
+          <section class="card stats">
             <div class="stat"><h3>난이도</h3><p id="statLevel">쉬움</p></div>
             <div class="stat"><h3>타이머</h3><p id="statTimer">00:00</p></div>
             <div class="stat"><h3>남은 칸</h3><p id="statEmpty">0</p></div>
             <div class="stat"><h3>오류 수</h3><p id="statErrors">0</p></div>
           </section>
-          <section class="card" aria-label="도움말">
+          <section class="card">
             <h2 style="margin-top:0; font-size:16px">도움말</h2>
             <p style="color:var(--muted); line-height:1.6">
-              같은 행, 같은 열, 같은 3×3 박스 안에는 1~9가 한 번씩만 들어갈 수 있어요.
+              같은 행, 같은 열, 같은 3×3 박스 안에는 1~9가 한 번씩만 들어갈 수 있어요.<br>
               연필 모드를 켜면 후보 숫자를 메모할 수 있습니다.
             </p>
           </section>
-
-          <!-- Side Ad -->
-          <section class="card ad" aria-label="광고 영역 사이드">
+          <section class="card ad">
             <ins class="adsbygoogle" style="display:block"
                  data-ad-client="ca-pub-2228289204702106"
                  data-ad-slot="3524788673"
                  data-ad-format="rectangle"
                  data-full-width-responsive="true"></ins>
-            <script>try{(adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}</script>
+            <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
           </section>
         </aside>
       </div>
@@ -265,17 +206,15 @@
     <footer>
       <div>© <span id="year"></span> sudoku.enjoy-onepage.com</div>
       <div class="links">
-        <a href="#" aria-label="개인정보 처리방침">개인정보 처리방침</a>
-        <span>·</span>
-        <a href="#" aria-label="문의">문의</a>
+        <a href="#">개인정보 처리방침</a><span>·</span><a href="#">문의</a>
       </div>
     </footer>
   </div>
 
-  <!-- Win Modal -->
-  <div id="winModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="winTitle">
+  <!-- 완료 모달 -->
+  <div id="winModal" class="modal">
     <div class="box">
-      <h2 id="winTitle">🎉 축하합니다!</h2>
+      <h2>🎉 축하합니다!</h2>
       <p id="winText">퍼즐을 완성했어요.</p>
       <div class="row">
         <button class="btn accent" id="btnAgain">다시 풀기</button>
@@ -285,262 +224,19 @@
     </div>
   </div>
 
-  <script>
-    /* ===== Kakao init (필요시 교체 가능) ===== */
-    window.addEventListener('DOMContentLoaded', () => {
-      try { if (window.Kakao && !Kakao.isInitialized()) Kakao.init('b157f51afb710d60c8b6bec3dc9a2d1f'); } catch(e){}
-    });
+<script>
+  // Kakao init
+  window.addEventListener('DOMContentLoaded', () => {
+    try{ if(window.Kakao && !Kakao.isInitialized()) Kakao.init('b157f51afb710d60c8b6bec3dc9a2d1f'); }catch(e){}
+  });
 
-    /* ===== Seeded RNG (공유 시 동일 퍼즐) ===== */
-    function mulberry32(a){ return function(){ let t=a+=0x6D2B79F5; t=Math.imul(t^t>>>15, t|1); t^=t+Math.imul(t^t>>>7, t|61); return ((t^t>>>14)>>>0)/4294967296; }; }
-    function strToSeed(s){ let h=0; for(let i=0;i<s.length;i++){ h=((h<<5)-h + s.charCodeAt(i))|0; } return (h>>>0); }
+  // ===== Sudoku Core =====
+  const rowIdx=i=>Math.floor(i/9), colIdx=i=>i%9, boxIdx=(r,c)=>Math.floor(r/3)*3+Math.floor(c/3);
+  const shuffle=a=>a.sort(()=>Math.random()-0.5);
+  function generateSolvedGrid(){ const g=new Array(81).fill(0); const r=Array.from({length:9},()=>new Set()), c=Array.from({length:9},()=>new Set()), b=Array.from({length:9},()=>new Set()); const nums=[1,2,3,4,5,6,7,8,9]; function place(i=0){ if(i===81) return true; const R=rowIdx(i),C=colIdx(i),B=boxIdx(R,C); for(const v of shuffle(nums.slice())){ if(!r[R].has(v)&&!c[C].has(v)&&!b[B].has(v)){ g[i]=v; r[R].add(v); c[C].add(v); b[B].add(v); if(place(i+1)) return true; g[i]=0; r[R].delete(v); c[C].delete(v); b[B].delete(v);} } return false;} place(); return g; }
+  function countSolutions(p,limit=2){ const g=p.slice(); let sol=0; function candAt(i){ const R=rowIdx(i),C=colIdx(i),u=new Set(); for(let k=0;k<9;k++){u.add(g[R*9+k]);u.add(g[k*9+C]);} const br=Math.floor(R/3)*3,bc=Math.floor(C/3)*3; for(let rr=0;rr<3;rr++)for(let cc=0;cc<3;cc++)u.add(g[(br+rr)*9+(bc+cc)]); const res=[]; for(let v=1;v<=9;v++)if(!u.has(v))res.push(v); return res;} function best(){ let best=-1,cand=null; for(let i=0;i<81;i++)if(g[i]===0){ const c=candAt(i); if(c.length===0) return {i,c:[]}; if(!cand||c.length<cand.length){best=i;cand=c;} } return {i:best,c:cand}; } function dfs(){ if(sol>=limit) return; const {i,c}=best(); if(i===-1){sol++;return;} for(const v of c){g[i]=v;dfs();g[i]=0;if(sol>=limit)return;} } dfs(); return sol;}
+  const DIFF={easy:40,medium:32,hard:26};
+  function makePuzzle(solved,clues){ const p=solved.slice(), ord=shuffle([...Array(81).keys()]); let left=81; for(const i of ord){ if(left<=clues) break; const bak=p[i]; p[i]=0; if(countSolutions(p,2)!==1){p[i]=bak;} else left--; } return p; }
 
-    const url = new URL(location.href);
-    const seedParam = url.searchParams.get('seed');
-    const diffParam = url.searchParams.get('d') || 'easy';
-    const seedValue = seedParam ? ( /^\d+$/.test(seedParam) ? Number(seedParam) : strToSeed(seedParam) ) : (Math.random()*1e9|0);
-    let rng = mulberry32(seedValue);
-    const RNG = () => rng();
-    const shuffle = arr => arr.sort(() => RNG() - 0.5);
-    const rowIdx = i => Math.floor(i/9);
-    const colIdx = i => i%9;
-    const boxIdx = (r,c)=>Math.floor(r/3)*3+Math.floor(c/3);
-
-    /* ===== Generator ===== */
-    function generateSolvedGrid(){
-      const grid = new Array(81).fill(0);
-      const rows = Array.from({length:9},()=>new Set());
-      const cols = Array.from({length:9},()=>new Set());
-      const boxes = Array.from({length:9},()=>new Set());
-      const nums = [1,2,3,4,5,6,7,8,9];
-      function place(i=0){
-        if(i===81) return true;
-        const r=rowIdx(i), c=colIdx(i), b=boxIdx(r,c);
-        const order=shuffle(nums.slice());
-        for(const v of order){
-          if(!rows[r].has(v)&&!cols[c].has(v)&&!boxes[b].has(v)){
-            grid[i]=v; rows[r].add(v); cols[c].add(v); boxes[b].add(v);
-            if(place(i+1)) return true;
-            grid[i]=0; rows[r].delete(v); cols[c].delete(v); boxes[b].delete(v);
-          }
-        }
-        return false;
-      }
-      place(0); return grid;
-    }
-
-    /* ===== Solver (uniqueness check) ===== */
-    function countSolutions(puzzle, limit=2){
-      const grid=puzzle.slice(); let solutions=0;
-      function candidatesAt(i){
-        const r=rowIdx(i), c=colIdx(i);
-        const used=new Set();
-        for(let k=0;k<9;k++){ used.add(grid[r*9+k]); used.add(grid[k*9+c]); }
-        const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
-        for(let rr=0; rr<3; rr++) for(let cc=0; cc<3; cc++){ used.add(grid[(br+rr)*9+(bc+cc)]); }
-        const cand=[]; for(let v=1; v<=9; v++) if(!used.has(v)) cand.push(v); return cand;
-      }
-      function bestEmpty(){
-        let best=-1, bestCand=null;
-        for(let i=0;i<81;i++) if(grid[i]===0){
-          const cand=candidatesAt(i); if(cand.length===0) return {i, cand:[]};
-          if(!bestCand||cand.length<bestCand.length){ best=i; bestCand=cand; if(cand.length===1) break; }
-        }
-        return {i:best, cand:bestCand};
-      }
-      function dfs(){
-        if(solutions>=limit) return;
-        const {i, cand}=bestEmpty();
-        if(i===-1){ solutions++; return; }
-        for(const v of cand){ grid[i]=v; dfs(); grid[i]=0; if(solutions>=limit) return; }
-      }
-      dfs(); return solutions;
-    }
-
-    /* ===== Puzzle maker ===== */
-    const DIFF = { easy:40, medium:32, hard:26 };
-    function makePuzzleFromSolved(solved, targetClues){
-      const puzzle=solved.slice(); const order=shuffle([...Array(81).keys()]); let clues=81;
-      for(const i of order){
-        if(clues<=targetClues) break;
-        const b=puzzle[i];
-        puzzle[i]=0;
-        if(countSolutions(puzzle,2)!==1){ puzzle[i]=b; } else { clues--; }
-      }
-      return puzzle;
-    }
-
-    /* ===== State ===== */
-    const state={
-      fixed:new Array(81).fill(false),
-      puzzle:new Array(81).fill(0),
-      solved:new Array(81).fill(0),
-      initialPuzzle:new Array(81).fill(0),
-      initialFixed:new Array(81).fill(false),
-      noteMode:false,
-      startTs:null, timerId:null,
-      won:false, revealed:false,
-    };
-
-    /* ===== UI Build ===== */
-    const gridEl=document.getElementById('grid');
-    const levelEl=document.getElementById('level');
-    const statLevel=document.getElementById('statLevel');
-    const statTimer=document.getElementById('statTimer');
-    const statEmpty=document.getElementById('statEmpty');
-    const statErrors=document.getElementById('statErrors');
-
-    const cells=[]; let selectIdx=null;
-    for(let r=0;r<9;r++){
-      for(let c=0;c<9;c++){
-        const i=r*9+c;
-        const cell=document.createElement('div'); cell.className='cell';
-        const input=document.createElement('input'); input.inputMode='numeric'; input.maxLength=1; input.autocomplete='off'; input.autocapitalize='off'; input.spellcheck=false; input.setAttribute('aria-label',`r${r+1} c${c+1}`);
-        cell.appendChild(input); gridEl.appendChild(cell);
-        cells.push({cell,input});
-        cell.addEventListener('click',()=>{ selectIdx=i; input.focus(); updateHighlight(); });
-        input.addEventListener('focus',()=>{ selectIdx=i; updateHighlight(); });
-        input.addEventListener('input',()=>onInput(i,input.value));
-        input.addEventListener('keydown',e=>{
-          if(['Backspace','Delete','0'].includes(e.key)){ setValue(i,0); e.preventDefault(); return; }
-          const move={ArrowUp:-9, ArrowDown:9, ArrowLeft:-1, ArrowRight:1}[e.key];
-          if(move){ e.preventDefault(); moveSelect(move); }
-        });
-      }
-    }
-
-    function moveSelect(delta){ if(selectIdx==null) return; const n=(selectIdx+delta+81)%81; selectIdx=n; cells[n].input.focus(); updateHighlight(); }
-
-    // Mobile keypad
-    document.querySelectorAll('.keypad .btn').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        const key = btn.dataset.key;
-        if(navigator.vibrate) try{ navigator.vibrate(12); }catch(e){}
-        if(selectIdx==null){
-          const firstEmpty = state.puzzle.findIndex(v=>v===0);
-          selectIdx = firstEmpty>=0 ? firstEmpty : 0; cells[selectIdx].input.focus();
-        }
-        if(key==='del'){ setValue(selectIdx,0); updateHighlight(); return; }
-        setValue(selectIdx, key);
-        // move to next empty
-        let next = selectIdx;
-        for(let k=1;k<=81;k++){ const i=(selectIdx+k)%81; if(!state.fixed[i] && state.puzzle[i]===0){ next=i; break; } }
-        selectIdx = next; cells[selectIdx].input.focus(); updateHighlight();
-      });
-    });
-
-    /* ===== Render ===== */
-    function render(){
-      let empty=0, errors=0;
-      for(let i=0;i<81;i++){
-        const {cell,input}=cells[i];
-        const v=state.puzzle[i], isFixed=state.fixed[i];
-        input.disabled=isFixed; input.value=v?String(v):'';
-        const err = v && state.solved[i]!==v && !isFixed;
-        cell.classList.toggle('error', err);
-        if(!v) empty++; if(err) errors++;
-      }
-      statEmpty.textContent=String(empty);
-      statErrors.textContent=String(errors);
-      updateHighlight();
-      checkWin();
-    }
-
-    function setValue(i,val){
-      if(state.fixed[i]) return;
-      const n=Number(val)||0; if(n<0||n>9) return;
-      state.puzzle[i]=n;
-      saveLocal(); render();
-    }
-    function onInput(i,raw){ const n=Number(raw.replace(/[^1-9]/g,'')); setValue(i, isNaN(n)?0:n); }
-
-    function toggleNotes(){ state.noteMode=!state.noteMode; document.getElementById('btnNotes').textContent='연필 모드: '+(state.noteMode?'켬':'끔'); }
-    function checkErrors(){ render(); flash('오류를 표시했어요'); }
-    function showSolution(){ state.revealed = true; state.puzzle = state.solved.slice(); for(let i=0;i<81;i++) state.fixed[i] = true; saveLocal(); render(); stopTimer(); flash('해답을 표시했어요'); }
-    function resetBoard(){ state.puzzle=state.initialPuzzle.slice(); state.fixed=state.initialFixed.slice(); state.revealed=false; state.won=false; saveLocal(); render(); startTimer(); }
-
-    function newGame(level='easy'){
-      const useSeed = seedParam ?? (Math.random()*1e9|0).toString();
-      const useDiff = level || 'easy';
-      const u = new URL(location.href); u.searchParams.set('seed', useSeed); u.searchParams.set('d', useDiff); history.replaceState({}, '', u.toString());
-      const sv = /^\d+$/.test(useSeed) ? Number(useSeed) : strToSeed(useSeed);
-      rng = mulberry32(sv);
-
-      const solved=generateSolvedGrid();
-      const target=DIFF[useDiff]||DIFF.easy;
-      const puzzle=makePuzzleFromSolved(solved, target);
-      state.solved=solved; state.puzzle=puzzle; state.fixed=puzzle.map(v=>v!==0);
-      state.initialPuzzle=puzzle.slice(); state.initialFixed=state.fixed.slice();
-      state.revealed=false; state.won=false;
-      statLevel.textContent = levelEl.options[levelEl.selectedIndex]?.textContent || '쉬움';
-      saveLocal(); render(); startTimer();
-    }
-
-    /* ===== Highlight ===== */
-    function updateHighlight(){
-      for(let i=0;i<81;i++){ cells[i].cell.classList.remove('sel','hl','same'); }
-      if(selectIdx==null) return;
-      const r=rowIdx(selectIdx), c=colIdx(selectIdx);
-      for(let i=0;i<81;i++){
-        const rr=rowIdx(i), cc=colIdx(i);
-        if(rr===r || cc===c || (Math.floor(rr/3)===Math.floor(r/3) && Math.floor(cc/3)===Math.floor(c/3))){
-          cells[i].cell.classList.add('hl');
-        }
-      }
-      cells[selectIdx].cell.classList.add('sel');
-      const v = state.puzzle[selectIdx];
-      if(v){ for(let i=0;i<81;i++){ if(state.puzzle[i]===v) cells[i].cell.classList.add('same'); } }
-    }
-
-    /* ===== Win Check ===== */
-    function checkWin(){
-      if(state.won || state.revealed) return;
-      for(let i=0;i<81;i++){ if(!state.puzzle[i] || state.puzzle[i]!==state.solved[i]) return; }
-      state.won = true; stopTimer();
-      const sec=Math.floor((Date.now()-state.startTs)/1000);
-      document.getElementById('winText').textContent = `난이도: ${levelEl.options[levelEl.selectedIndex].textContent} · 시간: ${fmtTime(sec)}`;
-      document.getElementById('winModal').style.display='grid';
-    }
-    document.getElementById('btnAgain').onclick=()=>{ document.getElementById('winModal').style.display='none'; newGame(levelEl.value); };
-
-    /* ===== Share ===== */
-    async function shareNative(){
-      const data={ title:'Sudoku — 즐겨요 원페이지', text:'가볍고 빠른 스도쿠. 유일해 보장 생성기 탑재!', url: location.href };
-      if(navigator.share){ try{ await navigator.share(data); } catch(e){} }
-      else { await navigator.clipboard.writeText(location.href); flash('링크를 복사했어요'); }
-    }
-    function shareKakao(){
-      try{
-        if(!window.Kakao){ flash('Kakao SDK 로딩 중입니다'); return; }
-        Kakao.Share.sendDefault({
-          objectType:'feed',
-          content:{ title:'Sudoku — 즐겨요 원페이지', description:'가볍고 빠른 스도쿠. 유일해 보장 생성기 탑재!', imageUrl: location.origin+'/og-image.png', link:{ mobileWebUrl:location.href, webUrl:location.href } },
-          buttons:[ { title:'지금 풀기', link:{ mobileWebUrl:location.href, webUrl:location.href } } ]
-        });
-      }catch(e){ flash('카카오톡 공유를 사용할 수 없어요'); }
-    }
-    document.getElementById('btnShare').onclick=shareNative;
-    document.getElementById('btnKakao').onclick=shareKakao;
-    document.getElementById('btnShareWin').onclick=shareNative;
-    document.getElementById('btnKakaoWin').onclick=shareKakao;
-
-    /* ===== Timer & Utils ===== */
-    function startTimer(){ state.startTs=Date.now(); if(state.timerId) clearInterval(state.timerId); state.timerId=setInterval(updateTimer,1000); updateTimer(); }
-    function stopTimer(){ if(state.timerId) clearInterval(state.timerId); state.timerId=null; }
-    function updateTimer(){ if(!state.startTs) return; const s=Math.floor((Date.now()-state.startTs)/1000); statTimer.textContent = fmtTime(s); }
-    function fmtTime(s){ const m=Math.floor(s/60), ss=s%60; return `${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`; }
-    function saveLocal(){ try{ localStorage.setItem('sudoku_state_v2', JSON.stringify({ ...state, seed:seedValue, diff:levelEl.value })); }catch(e){} }
-    function flash(msg){ const el=document.createElement('div'); el.textContent=msg; Object.assign(el.style,{ position:'fixed', left:'50%', top:'20px', transform:'translateX(-50%)', background:'rgba(56,189,248,.95)', color:'#003049', padding:'10px 14px', borderRadius:'10px', fontWeight:'800', zIndex:9999, boxShadow:'0 10px 30px rgba(56,189,248,.4)'}); document.body.appendChild(el); setTimeout(()=>{ el.style.transition='all .4s'; el.style.opacity='0'; el.style.transform='translateX(-50%) translateY(-6px)'; setTimeout(()=>el.remove(), 400); }, 1100); }
-
-    /* ===== Boot ===== */
-    document.getElementById('year').textContent=new Date().getFullYear();
-    document.getElementById('level').value = ['easy','medium','hard'].includes(diffParam)? diffParam : 'easy';
-    newGame(document.getElementById('level').value);
-    document.getElementById('btnNew').onclick=()=>newGame(document.getElementById('level').value);
-    document.getElementById('btnCheck').onclick=checkErrors;
-    document.getElementById('btnSolve').onclick=showSolution;
-    document.getElementById('btnReset').onclick=resetBoard;
-    document.getElementById('btnNotes').onclick=toggleNotes;
-  </script>
-</body>
-</html>
+  const state={puzzle:[],solved:[],fixed:[],won:false,revealed:false,startTs:null,timer:null};
+  const gridEl=document.getElementById('grid'), cells=[]; let select=null;
