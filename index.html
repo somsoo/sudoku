@@ -388,8 +388,8 @@
         await loadKakaoSDK();
         if(!window.Kakao) throw new Error('Kakao SDK not available');
         if(!Kakao.isInitialized()){
-          if(b157f51afb710d60c8b6bec3dc9a2d1f) throw new Error('카카오 앱키를 설정하세요.');
-          Kakao.init(b157f51afb710d60c8b6bec3dc9a2d1f);
+          if(!KAKAO_APP_KEY) throw new Error('카카오 앱키를 설정하세요.');
+          Kakao.init(KAKAO_APP_KEY);
         }
         const url = makeShareURL();
         Kakao.Share.sendDefault({
