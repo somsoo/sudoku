@@ -41,15 +41,23 @@
       --grid:#1e293b; --error:#fecaca; --focus:#bae6fd; --radius:16px;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
-      font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR","Apple SD Gothic Neo",Arial}
+    html,body{
+      margin:0;height:100%;background:var(--bg);color:var(--ink);
+      font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR","Apple SD Gothic Neo",Arial;
+      /* ✅ 가로 스크롤 방지 (레이아웃은 아래 수정들로 폭을 넘지 않게 함) */
+      overflow-x:hidden;
+    }
     .container{max-width:980px;margin:0 auto;padding:16px}
 
     /* header */
     .header{background:var(--brand);color:#fff;border-radius:var(--radius);padding:18px; position:relative}
     .header h1{margin:0;font-size:1.6rem;line-height:1.2;font-weight:900;letter-spacing:.02em}
     .header-sub{margin-top:6px;color:#e0f2fe;font-size:.95rem}
-    .header-buttons{margin-top:12px;display:flex;gap:8px;flex-wrap:nowrap}
+    .header-buttons{
+      margin-top:12px;display:flex;gap:8px;
+      /* ✅ 버튼이 줄바꿈되어 폭 초과로 인한 가로 스크롤 방지 */
+      flex-wrap:wrap;
+    }
     .btn{
       border:0;border-radius:999px;padding:10px 14px;font-weight:700;white-space:nowrap;
       background:#fff;color:#0369a1;box-shadow:0 1px 0 rgba(0,0,0,.06);cursor:pointer
@@ -62,6 +70,7 @@
     .share-menu{
       position:absolute; top:105%; left:0; background:#fff; border:1px solid #e2e8f0; border-radius:12px;
       box-shadow:0 8px 24px rgba(2,6,23,.15); padding:6px; display:none; z-index:20; min-width:160px;
+      max-width:100%;
     }
     .share-menu button{display:block; width:100%; text-align:left; border-radius:10px; border:0; padding:10px 12px; background:#fff; cursor:pointer}
     .share-menu button:hover{background:#f1f5f9}
@@ -69,7 +78,7 @@
     /* controls */
     .controls{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .controls label{font-weight:700}
-    select{border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;background:#fff;font-weight:600}
+    select{border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;background:#fff;font-weight:600;max-width:100%}
 
     /* action buttons grid */
     .actions{margin-top:8px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
@@ -79,8 +88,12 @@
     .board-card,.info-card{background:var(--card);border-radius:var(--radius);padding:12px;box-shadow:0 2px 10px rgba(2,6,23,.06)}
 
     /* board */
-    .board{width:min(92vw,520px);aspect-ratio:1;margin:8px auto;border:3px solid var(--grid);
-      border-radius:10px;display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);overflow:hidden;background:#fff}
+    .board{
+      /* ✅ 컨테이너 기준으로만 줄어들도록 조정: 92vw → 100% */
+      width:min(100%,520px);
+      aspect-ratio:1;margin:8px auto;border:3px solid var(--grid);
+      border-radius:10px;display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);overflow:hidden;background:#fff
+    }
     .cell{border:1px solid #cbd5e1;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;user-select:none}
     .cell.given{background:#f1f5f9;color:#0f172a}
     .cell.editable{cursor:pointer}
@@ -93,7 +106,7 @@
     .cell[data-c="8"]{border-right:3px solid var(--grid)}
 
     /* number pad */
-    .pad{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:520px;margin:10px auto 0}
+    .pad{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:520px;margin:10px auto 0;padding:0 2px}
     .pad button{padding:14px 0;border-radius:14px;border:1px solid #cbd5e1;background:#fff;font-weight:900;font-size:1.15rem;cursor:pointer}
     .pad .erase{grid-column:span 2}
     .pad button:active{transform:translateY(1px)}
@@ -111,6 +124,10 @@
       .btn,select,.btn.control{font-size:1rem}
       .pad button{font-size:1.25rem;padding:16px 0}
       .info{grid-template-columns:repeat(2,1fr)}
+    }
+    /* ✅ 초소형 화면에서 버튼 2열로 인한 넘침 방지 */
+    @media (max-width:380px){
+      .actions{grid-template-columns:1fr;}
     }
   </style>
 </head>
