@@ -129,6 +129,10 @@
     @media (max-width:380px){
       .actions{grid-template-columns:1fr;}
     }
+    /* ✅ 320px급 단말 간격 보강 */
+    @media (max-width:480px){
+      .pad{gap:8px}
+    }
   </style>
 </head>
 <body>
@@ -179,7 +183,7 @@
 
     <div class="wrap">
       <div class="board-card">
-        <div id="board" class="board" aria-label="스도쿠 보드"></div>
+        <div id="board" class="board" aria-label="스도쿠 보드" role="grid"></div>
         <div id="pad" class="pad" aria-label="숫자 패드"></div>
       </div>
 
@@ -241,6 +245,9 @@
           const d=document.createElement('div');
           d.className='cell'; d.dataset.r=r; d.dataset.c=c;
           d.addEventListener('click',()=>selectCell(r,c));
+          /* ✅ 접근성 보강 */
+          d.setAttribute('role','gridcell');
+          d.setAttribute('tabindex','0'); // given 여부는 렌더 때 적용
           boardEl.appendChild(d);
         }
       }
@@ -251,7 +258,8 @@
         const r=+cell.dataset.r,c=+cell.dataset.c,v=state[r][c];
         cell.textContent=v? v:'';
         cell.classList.remove('given','editable','selected','same','error');
-        if(given[r][c]) cell.classList.add('given'); else cell.classList.add('editable');
+        if(given[r][c]){ cell.classList.add('given'); cell.setAttribute('tabindex','-1'); }
+        else { cell.classList.add('editable'); cell.setAttribute('tabindex','0'); }
         if(selected.r===r && selected.c===c) cell.classList.add('selected');
         if(v && selected.r!==null && state[selected.r][selected.c]===v) cell.classList.add('same');
         if(!v) empty++;
@@ -290,18 +298,46 @@
       for(let i=0;i<3;i++)for(let j=0;j<3;j++) if(b[br+i][bc+j]===v) return false;
       return true;
     }
+
+    /* ✅ MRV 휴리스틱 기반 해답 개수 카운터 (유일성 검증 안정/속도 개선) */
     function solveCount(board,limit=2){
-      let cnt=0;
-      function dfs(b){
-        if(cnt>=limit) return;
-        let r=-1,c=-1;
-        outer: for(let i=0;i<9;i++)for(let j=0;j<9;j++)if(b[i][j]===0){r=i;c=j;break outer;}
-        if(r===-1){cnt++;return;}
-        const nums=shuffle([1,2,3,4,5,6,7,8,9]);
-        for(const v of nums){ if(valid(b,r,c,v)){ b[r][c]=v; dfs(b); b[r][c]=0; if(cnt>=limit) return; } }
+      let cnt = 0;
+      const b = deepCopy(board);
+
+      function nextCell(){
+        let best=null, bestCands=null;
+        for(let r=0;r<9;r++){
+          for(let c=0;c<9;c++){
+            if(b[r][c]!==0) continue;
+            const cands=[];
+            for(let v=1; v<=9; v++) if(valid(b,r,c,v)) cands.push(v);
+            if(cands.length===0) return {r,c,cands:[]};        // 막힘
+            if(bestCands===null || cands.length<bestCands.length){
+              best={r,c,cands}; bestCands=cands;
+              if(cands.length===1) return best;                // 조기 선택
+            }
+          }
+        }
+        return best; // null이면 모든 칸 채워짐
       }
-      dfs(deepCopy(board)); return cnt;
+
+      function dfs(){
+        if(cnt>=limit) return;            // 조기 중단
+        const cell=nextCell();
+        if(!cell){ cnt++; return; }       // 해 하나 완성
+        if(cell.cands.length===0) return; // 막힘
+
+        shuffle(cell.cands);              // 퍼즐 다양성 확보
+        const {r,c,cands}=cell;
+        for(const v of cands){
+          b[r][c]=v; dfs(); b[r][c]=0;
+          if(cnt>=limit) return;
+        }
+      }
+      dfs();
+      return cnt;
     }
+
     function generateFull(){
       const b=[...Array(9)].map(()=>Array(9).fill(0));
       function fill(idx=0){
@@ -312,30 +348,67 @@
       }
       fill(0); return b;
     }
+
+    /* ✅ 난이도별 holes(지울 개수) 재정의: 쉬움<보통<어려움 */
     function makePuzzle(full,diff='normal'){
-      const ranges={easy:[40,46],normal:[47,53],hard:[54,60]};
-      const [lo,hi]=ranges[diff]||ranges.normal, holes=rand(lo,hi);
-      const p=deepCopy(full); const pos=[]; for(let r=0;r<9;r++)for(let c=0;c<9;c++) pos.push([r,c]);
-      shuffle(pos); let removed=0;
+      // 쉬움: 단서 40~46 → holes 35~41
+      // 보통: 단서 32~38 → holes 43~49
+      // 어려움: 단서 24~30 → holes 51~57
+      const holeRangesByDiff = {
+        easy:   [35, 41],
+        normal: [43, 49],
+        hard:   [51, 57],
+      };
+      const [lo,hi]=holeRangesByDiff[diff]||holeRangesByDiff.normal;
+      const targetHoles = rand(lo,hi);
+
+      const p=deepCopy(full);
+      const pos=[]; for(let r=0;r<9;r++)for(let c=0;c<9;c++) pos.push([r,c]);
+      shuffle(pos);
+      let removed=0;
+
       for(const [r,c] of pos){
+        if(removed>=targetHoles) break;
         const bak=p[r][c]; p[r][c]=0;
         if(solveCount(p,2)!==1){ p[r][c]=bak; continue; }
-        removed++; if(removed>=holes) break;
+        removed++;
       }
       return p;
     }
 
+    /* ✅ 오류 중복 집계 방지(Set) */
     function highlightErrors(){
-      let errors=0;
-      [...boardEl.children].forEach(cell=>{
-        cell.classList.remove('error');
-        const r=+cell.dataset.r,c=+cell.dataset.c,v=state[r][c]; if(!v) return;
-        for(let cc=0;cc<9;cc++){ if(cc!==c && state[r][cc]===v){cell.classList.add('error');errors++;break;} }
-        for(let rr=0;rr<9;rr++){ if(rr!==r && state[rr][c]===v){cell.classList.add('error');errors++;break;} }
-        const br=Math.floor(r/3)*3,bc=Math.floor(c/3)*3;
-        for(let i=0;i<3;i++)for(let j=0;j<3;j++){const rr=br+i,cc=bc+j;if(!(rr===r&&cc===c)&&state[rr][cc]===v){cell.classList.add('error');errors++;i=3;j=3;}}
+      const errorIdx = new Set();
+      [...boardEl.children].forEach(cell=>cell.classList.remove('error'));
+
+      for(let r=0;r<9;r++){
+        for(let c=0;c<9;c++){
+          const v=state[r][c]; if(!v) continue;
+
+          // 행
+          for(let cc=0;cc<9;cc++){
+            if(cc!==c && state[r][cc]===v){ errorIdx.add(`${r},${c}`); break; }
+          }
+          // 열
+          for(let rr=0;rr<9;rr++){
+            if(rr!==r && state[rr][c]===v){ errorIdx.add(`${r},${c}`); break; }
+          }
+          // 박스
+          const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
+          for(let i=0;i<3;i++)for(let j=0;j<3;j++){
+            const rr=br+i, cc=bc+j;
+            if((rr!==r || cc!==c) && state[rr][cc]===v){ errorIdx.add(`${r},${c}`); i=3; j=3; }
+          }
+        }
+      }
+
+      errorIdx.forEach(key=>{
+        const [rr,cc]=key.split(',').map(Number);
+        const idx=rr*9+cc;
+        boardEl.children[idx]?.classList.add('error');
       });
-      mistakes=errors; document.getElementById('info-errors').textContent=mistakes;
+      mistakes = errorIdx.size;
+      document.getElementById('info-errors').textContent=mistakes;
     }
 
     /* ========= 승리 체크 (해답보기 시 차단) ========= */
