@@ -39,28 +39,19 @@
     html,body{
       margin:0;height:100%;background:var(--bg);color:var(--ink);
       font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR","Apple SD Gothic Neo",Arial;
-      /* ✅ 가로 스크롤 방지 (레이아웃은 아래 수정들로 폭을 넘지 않게 함) */
       overflow-x:hidden;
     }
     .container{max-width:980px;margin:0 auto;padding:16px}
-
-    /* header */
     .header{background:var(--brand);color:#fff;border-radius:var(--radius);padding:18px; position:relative}
     .header h1{margin:0;font-size:1.6rem;line-height:1.2;font-weight:900;letter-spacing:.02em}
     .header-sub{margin-top:6px;color:#e0f2fe;font-size:.95rem}
-    .header-buttons{
-      margin-top:12px;display:flex;gap:8px;
-      /* ✅ 버튼이 줄바꿈되어 폭 초과로 인한 가로 스크롤 방지 */
-      flex-wrap:wrap;
-    }
+    .header-buttons{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
     .btn{
       border:0;border-radius:999px;padding:10px 14px;font-weight:700;white-space:nowrap;
       background:#fff;color:#0369a1;box-shadow:0 1px 0 rgba(0,0,0,.06);cursor:pointer
     }
     .btn.secondary{background:#e2f3ff;color:#075985}
     .btn.ghost{background:#ffffffd9}
-
-    /* share menu */
     .share-menu-wrap{position:relative}
     .share-menu{
       position:absolute; top:105%; left:0; background:#fff; border:1px solid #e2e8f0; border-radius:12px;
@@ -69,22 +60,14 @@
     }
     .share-menu button{display:block; width:100%; text-align:left; border-radius:10px; border:0; padding:10px 12px; background:#fff; cursor:pointer}
     .share-menu button:hover{background:#f1f5f9}
-
-    /* controls */
     .controls{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .controls label{font-weight:700}
     select{border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;background:#fff;font-weight:600;max-width:100%}
-
-    /* action buttons grid */
     .actions{margin-top:8px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
     .btn.control{border:1px solid #cbd5e1;background:#fff;color:#075985;border-radius:10px;width:100%}
-
     .wrap{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
     .board-card,.info-card{background:var(--card);border-radius:var(--radius);padding:12px;box-shadow:0 2px 10px rgba(2,6,23,.06)}
-
-    /* board */
     .board{
-      /* ✅ 컨테이너 기준으로만 줄어들도록 조정: 92vw → 100% */
       width:min(100%,520px);
       aspect-ratio:1;margin:8px auto;border:3px solid var(--grid);
       border-radius:10px;display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);overflow:hidden;background:#fff
@@ -95,25 +78,19 @@
     .cell.selected{outline:3px solid var(--focus);z-index:2;position:relative}
     .cell.same{background:#eaf6ff}
     .cell.error{background:var(--error)}
-    .cell.marked{background:#fef9c3} /* ✅ 추가된 스타일 */
+    .cell.marked{background:#fef9c3}
     .cell[data-r="0"],.cell[data-r="3"],.cell[data-r="6"]{border-top:3px solid var(--grid)}
     .cell[data-c="0"],.cell[data-c="3"],.cell[data-c="6"]{border-left:3px solid var(--grid)}
     .cell[data-r="8"]{border-bottom:3px solid var(--grid)}
     .cell[data-c="8"]{border-right:3px solid var(--grid)}
-
-    /* number pad */
     .pad{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:520px;margin:10px auto 0;padding:0 2px}
     .pad button{padding:14px 0;border-radius:14px;border:1px solid #cbd5e1;background:#fff;font-weight:900;font-size:1.15rem;cursor:pointer}
     .pad .erase{grid-column:span 2}
     .pad button:active{transform:translateY(1px)}
-
-    /* info tiles */
     .info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
     .tile{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center}
     .tile .k{color:var(--muted);font-size:.9rem}
     .tile .v{font-size:1.15rem;font-weight:900;margin-top:6px}
-
-    /* responsive */
     @media (max-width:600px){
       html{font-size:18px}
       .header h1{font-size:1.35rem}
@@ -121,11 +98,9 @@
       .pad button{font-size:1.25rem;padding:16px 0}
       .info{grid-template-columns:repeat(2,1fr)}
     }
-    /* ✅ 초소형 화면에서 버튼 2열로 인한 넘침 방지 */
     @media (max-width:380px){
       .actions{grid-template-columns:1fr;}
     }
-    /* ✅ 320px급 단말 간격 보강 */
     @media (max-width:480px){
       .pad{gap:8px}
     }
@@ -172,7 +147,8 @@
       <button class="btn control" id="btn-check">오류 체크</button>
       <button class="btn control" id="btn-solve">해답 보기</button>
       <button class="btn control" id="btn-reset">초기화</button>
-      <button class="btn control" id="btn-mark">나중에 확인 표시/해제</button> </section>
+      <button class="btn control" id="btn-mark">칸 표시/해제</button>
+    </section>
 
     <div class="wrap">
       <div class="board-card">
@@ -194,6 +170,9 @@
           <div class="tile"><div class="k">남은 칸</div><div class="v" id="info-empty">0</div></div>
           <div class="tile"><div class="k">오류 수</div><div class="v" id="info-errors">0</div></div>
           <div class="tile"><div class="k">상태</div><div class="v" id="info-state">진행 중</div></div>
+        </div>
+        <div id="result-share-area" style="display:none; text-align:center; margin-top:12px;">
+          <button id="btn-share-result" class="btn secondary">🏆 카카오톡으로 결과 공유</button>
         </div>
       </div>
 
@@ -223,10 +202,11 @@
     let puzzle=[...Array(9)].map(()=>Array(9).fill(0));
     let state=[...Array(9)].map(()=>Array(9).fill(0));
     let given=[...Array(9)].map(()=>Array(9).fill(false));
-    let marked=[...Array(9)].map(()=>Array(9).fill(false)); // ✅ 추가된 변수
+    let marked=[...Array(9)].map(()=>Array(9).fill(false));
     let selected={r:null,c:null};
     let timer=0,timerId=null,mistakes=0;
-    let revealed=false; // ✅ 해답보기 플래그
+    let revealed=false;
+    let finalClearTime = null, finalDifficulty = null;
 
     /* ========= 보드 ========= */
     const boardEl=document.getElementById('board');
@@ -237,9 +217,8 @@
           const d=document.createElement('div');
           d.className='cell'; d.dataset.r=r; d.dataset.c=c;
           d.addEventListener('click',()=>selectCell(r,c));
-          /* ✅ 접근성 보강 */
           d.setAttribute('role','gridcell');
-          d.setAttribute('tabindex','0'); // given 여부는 렌더 때 적용
+          d.setAttribute('tabindex','0');
           boardEl.appendChild(d);
         }
       }
@@ -249,10 +228,10 @@
       [...boardEl.children].forEach(cell=>{
         const r=+cell.dataset.r,c=+cell.dataset.c,v=state[r][c];
         cell.textContent=v? v:'';
-        cell.classList.remove('given','editable','selected','same','error','marked'); // ✅ 'marked' 추가
+        cell.classList.remove('given','editable','selected','same','error','marked');
         if(given[r][c]){ cell.classList.add('given'); cell.setAttribute('tabindex','-1'); }
         else { cell.classList.add('editable'); cell.setAttribute('tabindex','0'); }
-        if(marked[r][c]) cell.classList.add('marked'); // ✅ 추가된 로직
+        if(marked[r][c]) cell.classList.add('marked');
         if(selected.r===r && selected.c===c) cell.classList.add('selected');
         if(v && selected.r!==null && state[selected.r][selected.c]===v) cell.classList.add('same');
         if(!v) empty++;
@@ -291,12 +270,9 @@
       for(let i=0;i<3;i++)for(let j=0;j<3;j++) if(b[br+i][bc+j]===v) return false;
       return true;
     }
-
-    /* ✅ MRV 휴리스틱 기반 해답 개수 카운터 (유일성 검증 안정/속도 개선) */
     function solveCount(board,limit=2){
       let cnt = 0;
       const b = deepCopy(board);
-
       function nextCell(){
         let best=null, bestCands=null;
         for(let r=0;r<9;r++){
@@ -304,23 +280,21 @@
             if(b[r][c]!==0) continue;
             const cands=[];
             for(let v=1; v<=9; v++) if(valid(b,r,c,v)) cands.push(v);
-            if(cands.length===0) return {r,c,cands:[]};        // 막힘
+            if(cands.length===0) return {r,c,cands:[]};
             if(bestCands===null || cands.length<bestCands.length){
               best={r,c,cands}; bestCands=cands;
-              if(cands.length===1) return best;                // 조기 선택
+              if(cands.length===1) return best;
             }
           }
         }
-        return best; // null이면 모든 칸 채워짐
+        return best;
       }
-
       function dfs(){
-        if(cnt>=limit) return;            // 조기 중단
+        if(cnt>=limit) return;
         const cell=nextCell();
-        if(!cell){ cnt++; return; }       // 해 하나 완성
-        if(cell.cands.length===0) return; // 막힘
-
-        shuffle(cell.cands);              // 퍼즐 다양성 확보
+        if(!cell){ cnt++; return; }
+        if(cell.cands.length===0) return;
+        shuffle(cell.cands);
         const {r,c,cands}=cell;
         for(const v of cands){
           b[r][c]=v; dfs(); b[r][c]=0;
@@ -330,7 +304,6 @@
       dfs();
       return cnt;
     }
-
     function generateFull(){
       const b=[...Array(9)].map(()=>Array(9).fill(0));
       function fill(idx=0){
@@ -341,25 +314,14 @@
       }
       fill(0); return b;
     }
-
-    /* ✅ 난이도별 holes(지울 개수) 재정의: 쉬움<보통<어려움 */
     function makePuzzle(full,diff='normal'){
-      // 쉬움: 단서 40~46 → holes 35~41
-      // 보통: 단서 32~38 → holes 43~49
-      // 어려움: 단서 24~30 → holes 51~57
-      const holeRangesByDiff = {
-        easy:   [35, 41],
-        normal: [43, 49],
-        hard:   [51, 57],
-      };
+      const holeRangesByDiff = { easy: [35, 41], normal: [43, 49], hard: [51, 57] };
       const [lo,hi]=holeRangesByDiff[diff]||holeRangesByDiff.normal;
       const targetHoles = rand(lo,hi);
-
       const p=deepCopy(full);
       const pos=[]; for(let r=0;r<9;r++)for(let c=0;c<9;c++) pos.push([r,c]);
       shuffle(pos);
       let removed=0;
-
       for(const [r,c] of pos){
         if(removed>=targetHoles) break;
         const bak=p[r][c]; p[r][c]=0;
@@ -368,25 +330,14 @@
       }
       return p;
     }
-
-    /* ✅ 오류 중복 집계 방지(Set) */
     function highlightErrors(){
       const errorIdx = new Set();
       [...boardEl.children].forEach(cell=>cell.classList.remove('error'));
-
       for(let r=0;r<9;r++){
         for(let c=0;c<9;c++){
           const v=state[r][c]; if(!v) continue;
-
-          // 행
-          for(let cc=0;cc<9;cc++){
-            if(cc!==c && state[r][cc]===v){ errorIdx.add(`${r},${c}`); break; }
-          }
-          // 열
-          for(let rr=0;rr<9;rr++){
-            if(rr!==r && state[rr][c]===v){ errorIdx.add(`${r},${c}`); break; }
-          }
-          // 박스
+          for(let cc=0;cc<9;cc++){ if(cc!==c && state[r][cc]===v){ errorIdx.add(`${r},${c}`); break; } }
+          for(let rr=0;rr<9;rr++){ if(rr!==r && state[rr][c]===v){ errorIdx.add(`${r},${c}`); break; } }
           const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
           for(let i=0;i<3;i++)for(let j=0;j<3;j++){
             const rr=br+i, cc=bc+j;
@@ -394,7 +345,6 @@
           }
         }
       }
-
       errorIdx.forEach(key=>{
         const [rr,cc]=key.split(',').map(Number);
         const idx=rr*9+cc;
@@ -404,27 +354,31 @@
       document.getElementById('info-errors').textContent=mistakes;
     }
 
-    /* ========= 승리 체크 (해답보기 시 차단) ========= */
+    /* ========= 승리 체크 ========= */
     function checkWin(){
-      if(revealed) return; // ✅ 해답을 본 상태면 축하 차단
+      if(revealed) return;
       for(let r=0;r<9;r++)for(let c=0;c<9;c++){
         if(state[r][c]===0) return;
         if(state[r][c]!==solution[r][c]) return;
       }
       stopTimer();
       document.getElementById('info-state').textContent='클리어! 🎉';
-      setTimeout(()=>alert('🎉 클리어! 멋져요!'),60);
+      finalClearTime = timer;
+      const diffEl = document.getElementById('difficulty');
+      finalDifficulty = diffEl.options[diffEl.selectedIndex].text;
+      document.getElementById('result-share-area').style.display = 'block';
     }
 
     /* ========= 공유 인코딩 ========= */
     function encode(b){return b.flat().join('')}
     function decode(s){const a=[...s].map(ch=>parseInt(ch,10));const b=[...Array(9)].map(()=>Array(9).fill(0));
       for(let i=0;i<81;i++) b[Math.floor(i/9)][i%9]=a[i]||0; return b;}
-    function makeShareURL(){
+    function makeShareURL(clearTime = null){
       const u=new URL(location.href);
       u.searchParams.set('p',encode(puzzle));
       u.searchParams.set('s',encode(solution));
       u.searchParams.set('d',document.getElementById('difficulty').value);
+      if(clearTime !== null) u.searchParams.set('t', clearTime);
       return u.toString();
     }
     function loadFromShare(u){
@@ -483,26 +437,48 @@
             imageUrl: "https://sudoku.enjoy-onepage.com/og-image.png",
             link: { mobileWebUrl: url, webUrl: url }
           },
-          buttons: [
-            { title: "지금 풀기", link: { mobileWebUrl: url, webUrl: url } }
-          ]
+          buttons: [ { title: "지금 풀기", link: { mobileWebUrl: url, webUrl: url } } ]
         });
-      }catch(e){
-        await shareSystem();
-      }
+      }catch(e){ await shareSystem(); }
       hideShareMenu();
+    }
+    async function shareResultKakao(){
+      const m = String(Math.floor(finalClearTime / 60)).padStart(2, '0');
+      const s = String(finalClearTime % 60).padStart(2, '0');
+      const timeStr = `${m}:${s}`;
+      try{
+        await loadKakaoSDK();
+        if(!window.Kakao) throw new Error('Kakao SDK not available');
+        if(!Kakao.isInitialized()){
+          if(!KAKAO_APP_KEY) throw new Error('카카오 앱키를 설정하세요.');
+          Kakao.init(KAKAO_APP_KEY);
+        }
+        const url = makeShareURL(finalClearTime);
+        Kakao.Share.sendDefault({
+          objectType: "feed",
+          content: {
+            title: `스도쿠 클리어! (${finalDifficulty})`,
+            description: `대단해요! 퍼즐을 ${timeStr} 만에 해결했어요.`,
+            imageUrl: "https://sudoku.enjoy-onepage.com/og-image.png",
+            link: { mobileWebUrl: url, webUrl: url }
+          },
+          buttons: [ { title: "같은 문제 풀기", link: { mobileWebUrl: url, webUrl: url } } ]
+        });
+      }catch(e){ alert('결과 공유에 실패했어요. 링크를 수동으로 복사해 보세요.'); }
     }
 
     /* ========= 새게임/초기화 ========= */
     function newGame(diff){
-      revealed=false; // ✅ 해답보기 플래그 리셋
+      revealed=false;
       document.getElementById('info-diff').textContent=diff==='easy'?'쉬움':diff==='hard'?'어려움':'보통';
       const full=generateFull(); const puz=makePuzzle(full,diff);
       solution=full; puzzle=puz; state=deepCopy(puz);
-      marked=[...Array(9)].map(()=>Array(9).fill(false)); // ✅ 추가
+      marked=[...Array(9)].map(()=>Array(9).fill(false));
       given=[...Array(9)].map(()=>Array(9).fill(false));
       for(let r=0;r<9;r++)for(let c=0;c<9;c++) given[r][c]=puzzle[r][c]!==0;
       selected={r:null,c:null}; mistakes=0; document.getElementById('info-state').textContent='진행 중';
+      finalClearTime = null; finalDifficulty = null;
+      document.getElementById('result-share-area').style.display = 'none';
       startTimer(); renderBoard(); history.replaceState({},'',makeShareURL());
       try{ (adsbygoogle = window.adsbygoogle || []).push({}); }catch(_){}
     }
@@ -516,50 +492,44 @@
     document.getElementById('btn-kakao').addEventListener('click',shareKakao);
     document.getElementById('btn-system').addEventListener('click',shareSystem);
     document.addEventListener('click',e=>{ if(!e.target.closest('.share-menu-wrap')) hideShareMenu(); });
-
     document.getElementById('btn-new').addEventListener('click',()=>newGame(document.getElementById('difficulty').value));
     document.getElementById('btn-check').addEventListener('click',highlightErrors);
-
-    // ✅ 해답 보기: 축하 차단 & 전체 고정 처리
     document.getElementById('btn-solve').addEventListener('click',()=>{
-      revealed = true;                 // 해답 보기 상태
-      state = deepCopy(solution);      // 해답으로 채우기
-      for(let r=0;r<9;r++) for(let c=0;c<9;c++) given[r][c]=true; // 모두 고정
+      revealed = true;
+      state = deepCopy(solution);
+      for(let r=0;r<9;r++) for(let c=0;c<9;c++) given[r][c]=true;
       renderBoard();
       highlightErrors();
       stopTimer();
       document.getElementById('info-state').textContent='해답 표시됨';
-      // checkWin() 호출 없음
     });
-
-    // ✅ '칸 표시/해제' 버튼 이벤트 리스너
     document.getElementById('btn-mark').addEventListener('click', ()=>{
       const {r, c} = selected;
-      if (r === null || given[r][c]) return; // 선택된 칸이 없거나, 고정된 칸이면 동작 안 함
-      marked[r][c] = !marked[r][c]; // marked 상태를 토글 (true -> false, false -> true)
+      if (r === null || given[r][c]) return;
+      marked[r][c] = !marked[r][c];
       renderBoard();
     });
-
     document.getElementById('btn-reset').addEventListener('click',()=>{
-      revealed = false;                // 리셋 시 플래그 해제 ✅
-      marked=[...Array(9)].map(()=>Array(9).fill(false)); // ✅ 추가
+      revealed = false;
+      marked=[...Array(9)].map(()=>Array(9).fill(false));
       state=deepCopy(puzzle); mistakes=0;
+      finalClearTime = null; finalDifficulty = null;
+      document.getElementById('result-share-area').style.display = 'none';
       renderBoard(); highlightErrors();
       document.getElementById('info-state').textContent='진행 중';
     });
-
     document.getElementById('btn-copy').addEventListener('click',async()=>{
       await navigator.clipboard.writeText(makeShareURL());
       alert('현재 퍼즐 URL을 복사했어요!');
     });
-
+    document.getElementById('btn-share-result').addEventListener('click', shareResultKakao);
     document.getElementById('difficulty').addEventListener('change',e=>newGame(e.target.value));
 
     /* ========= 초기 구동 ========= */
     buildBoard(); buildPad();
     if(!loadFromShare(location.href)){ newGame('normal'); }
     else{
-      revealed=false; // 공유 불러오기 때는 사용자 플레이 상태로 시작
+      revealed=false;
       startTimer(); renderBoard();
       history.replaceState({},'',makeShareURL());
       document.getElementById('info-diff').textContent=
@@ -573,11 +543,12 @@
       if(e.key>='1'&&e.key<='9') place(+e.key);
       if(['Backspace','Delete','0'].includes(e.key)) place(0);
       if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){
+        e.preventDefault();
         const dr=e.key==='ArrowUp'?-1:e.key==='ArrowDown'?1:0;
         const dc=e.key==='ArrowLeft'?-1:e.key==='ArrowRight'?1:0;
         let r=selected.r,c=selected.c;
-        do{ r=(r+dr+9)%9; c=(c+dc+9)%9; }while(given[r][c]);
-        selectCell(r,c);
+        do{ r=(r+dr+9)%9; c=(c+dc+9)%9; }while(given[r][c] && (r!==selected.r || c!==selected.c));
+        if(!given[r][c]) selectCell(r,c);
       }
     });
   </script>
