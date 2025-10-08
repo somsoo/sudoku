@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SUDOKU 스도쿠</title>
 
-  <!-- Basic SEO -->
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://sudoku.enjoy-onepage.com/" />
   <meta name="author" content="Sudoku 원페이지" />
   <meta name="description" content="깔끔한 원페이지 스도쿠! 유일해답 보장 퍼즐 생성기 · 난이도별 퍼즐 · 오류 체크 · 해답 보기 · 공유 기능 제공" />
   <meta name="theme-color" content="#38bdf8" />
 
-  <!-- Open Graph -->
   <meta property="og:locale" content="ko_KR" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="SUDOKU 스도쿠 — 즐겨요 원페이지" />
@@ -20,19 +18,16 @@
   <meta property="og:url" content="https://sudoku.enjoy-onepage.com/" />
   <meta property="og:image" content="https://sudoku.enjoy-onepage.com/og-image.png" />
 
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="SUDOKU 스도쿠 — 즐겨요 원페이지" />
   <meta name="twitter:description" content="깔끔한 원페이지 스도쿠! 난이도별 퍼즐, 오류 체크, 공유 기능 제공" />
   <meta name="twitter:image" content="https://sudoku.enjoy-onepage.com/og-image.png" />
 
-  <!-- Icons (권장 구성) -->
   <link rel="icon" href="/favicon.ico?v=2" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=2">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" sizes="180x180">
 
-  <!-- Adsense (네 계정 값 사용) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2228289204702106" crossorigin="anonymous"></script>
 
   <style>
@@ -100,6 +95,7 @@
     .cell.selected{outline:3px solid var(--focus);z-index:2;position:relative}
     .cell.same{background:#eaf6ff}
     .cell.error{background:var(--error)}
+    .cell.marked{background:#fef9c3} /* ✅ 추가된 스타일 */
     .cell[data-r="0"],.cell[data-r="3"],.cell[data-r="6"]{border-top:3px solid var(--grid)}
     .cell[data-c="0"],.cell[data-c="3"],.cell[data-c="6"]{border-left:3px solid var(--grid)}
     .cell[data-r="8"]{border-bottom:3px solid var(--grid)}
@@ -153,7 +149,6 @@
       </div>
     </header>
 
-    <!-- 상단 광고 (slot: 7464033680) -->
     <ins class="adsbygoogle"
          style="display:block; text-align:center; margin:10px auto; width:100%;"
          data-ad-client="ca-pub-2228289204702106"
@@ -162,7 +157,6 @@
          data-full-width-responsive="true"></ins>
     <script>try{(adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}</script>
 
-    <!-- 난이도 -->
     <section class="controls">
       <label for="difficulty">난이도</label>
       <select id="difficulty" title="난이도">
@@ -173,13 +167,12 @@
       <strong id="info-diff" style="margin-left:4px;color:#0f172a">보통</strong>
     </section>
 
-    <!-- 액션 -->
     <section class="actions">
       <button class="btn control" id="btn-new">새 퍼즐</button>
       <button class="btn control" id="btn-check">오류 체크</button>
       <button class="btn control" id="btn-solve">해답 보기</button>
       <button class="btn control" id="btn-reset">초기화</button>
-    </section>
+      <button class="btn control" id="btn-mark">칸 표시/해제</button> </section>
 
     <div class="wrap">
       <div class="board-card">
@@ -187,7 +180,6 @@
         <div id="pad" class="pad" aria-label="숫자 패드"></div>
       </div>
 
-      <!-- 본문 광고 (slot: 6150952012) -->
       <ins class="adsbygoogle"
            style="display:block; text-align:center; margin:8px auto; max-width:520px"
            data-ad-client="ca-pub-2228289204702106"
@@ -205,7 +197,6 @@
         </div>
       </div>
 
-      <!-- 하단 광고 (slot: 3524788673) -->
       <ins class="adsbygoogle"
            style="display:block; text-align:center; margin:8px auto; width:100%"
            data-ad-client="ca-pub-2228289204702106"
@@ -232,6 +223,7 @@
     let puzzle=[...Array(9)].map(()=>Array(9).fill(0));
     let state=[...Array(9)].map(()=>Array(9).fill(0));
     let given=[...Array(9)].map(()=>Array(9).fill(false));
+    let marked=[...Array(9)].map(()=>Array(9).fill(false)); // ✅ 추가된 변수
     let selected={r:null,c:null};
     let timer=0,timerId=null,mistakes=0;
     let revealed=false; // ✅ 해답보기 플래그
@@ -257,9 +249,10 @@
       [...boardEl.children].forEach(cell=>{
         const r=+cell.dataset.r,c=+cell.dataset.c,v=state[r][c];
         cell.textContent=v? v:'';
-        cell.classList.remove('given','editable','selected','same','error');
+        cell.classList.remove('given','editable','selected','same','error','marked'); // ✅ 'marked' 추가
         if(given[r][c]){ cell.classList.add('given'); cell.setAttribute('tabindex','-1'); }
         else { cell.classList.add('editable'); cell.setAttribute('tabindex','0'); }
+        if(marked[r][c]) cell.classList.add('marked'); // ✅ 추가된 로직
         if(selected.r===r && selected.c===c) cell.classList.add('selected');
         if(v && selected.r!==null && state[selected.r][selected.c]===v) cell.classList.add('same');
         if(!v) empty++;
@@ -506,6 +499,7 @@
       document.getElementById('info-diff').textContent=diff==='easy'?'쉬움':diff==='hard'?'어려움':'보통';
       const full=generateFull(); const puz=makePuzzle(full,diff);
       solution=full; puzzle=puz; state=deepCopy(puz);
+      marked=[...Array(9)].map(()=>Array(9).fill(false)); // ✅ 추가
       given=[...Array(9)].map(()=>Array(9).fill(false));
       for(let r=0;r<9;r++)for(let c=0;c<9;c++) given[r][c]=puzzle[r][c]!==0;
       selected={r:null,c:null}; mistakes=0; document.getElementById('info-state').textContent='진행 중';
@@ -538,8 +532,17 @@
       // checkWin() 호출 없음
     });
 
+    // ✅ '칸 표시/해제' 버튼 이벤트 리스너
+    document.getElementById('btn-mark').addEventListener('click', ()=>{
+      const {r, c} = selected;
+      if (r === null || given[r][c]) return; // 선택된 칸이 없거나, 고정된 칸이면 동작 안 함
+      marked[r][c] = !marked[r][c]; // marked 상태를 토글 (true -> false, false -> true)
+      renderBoard();
+    });
+
     document.getElementById('btn-reset').addEventListener('click',()=>{
       revealed = false;                // 리셋 시 플래그 해제 ✅
+      marked=[...Array(9)].map(()=>Array(9).fill(false)); // ✅ 추가
       state=deepCopy(puzzle); mistakes=0;
       renderBoard(); highlightErrors();
       document.getElementById('info-state').textContent='진행 중';
