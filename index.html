@@ -9,9 +9,7 @@
   <link rel="canonical" href="https://sudoku.enjoy-onepage.com/" />
   <meta name="author" content="Sudoku 원페이지" />
   <meta name="description" content="깔끔한 원페이지 스도쿠! 유일해답 보장 퍼즐 생성기 · 난이도별 퍼즐 · 오류 체크 · 해답 보기 · 공유 기능 제공" />
-  <meta name="theme-color" content="#38bdf8" />
-
-  <meta property="og:locale" content="ko_KR" />
+  <meta name="theme-color" content="#f97316" /> <meta property="og:locale" content="ko_KR" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="SUDOKU 스도쿠 — 즐겨요 원페이지" />
   <meta property="og:description" content="깔끔한 원페이지 스도쿠! 유일해답 보장 퍼즐 생성기 · 난이도별 퍼즐 · 오류 체크 · 해답 보기 · 공유 기능 제공" />
@@ -32,8 +30,15 @@
 
   <style>
     :root{
-      --brand:#38bdf8; --ink:#0f172a; --muted:#64748b; --bg:#f8fafc; --card:#ffffff;
-      --grid:#1e293b; --error:#fecaca; --focus:#bae6fd; --radius:16px;
+      --brand:#f97316; /* 수정: 주황색 */
+      --ink:#26160a; /* 수정: 진한 갈색 */
+      --muted:#926f5d; /* 수정: 차분한 주황-갈색 */
+      --bg:#fff7ed; /* 수정: 연한 주황색 배경 */
+      --card:#ffffff;
+      --grid:#8f3d0a; /* 수정: 진한 주황-갈색 */
+      --error:#fecaca;
+      --focus:#fdbd8c; /* 수정: 연한 주황색 */
+      --radius:16px;
     }
     *{box-sizing:border-box}
     html,body{
@@ -44,13 +49,13 @@
     .container{max-width:980px;margin:0 auto;padding:16px}
     .header{background:var(--brand);color:#fff;border-radius:var(--radius);padding:18px; position:relative}
     .header h1{margin:0;font-size:1.6rem;line-height:1.2;font-weight:900;letter-spacing:.02em}
-    .header-sub{margin-top:6px;color:#e0f2fe;font-size:.95rem}
+    .header-sub{margin-top:6px;color:#ffedd5; /* 수정: 헤더 서브텍스트 색상 */ font-size:.95rem}
     .header-buttons{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
     .btn{
       border:0;border-radius:999px;padding:10px 14px;font-weight:700;white-space:nowrap;
-      background:#fff;color:#0369a1;box-shadow:0 1px 0 rgba(0,0,0,.06);cursor:pointer
+      background:#fff;color:#ea580c; /* 수정: 버튼 텍스트 색상 */ box-shadow:0 1px 0 rgba(0,0,0,.06);cursor:pointer
     }
-    .btn.secondary{background:#e2f3ff;color:#075985}
+    .btn.secondary{background:#fcd3b2; /* 수정: 보조 버튼 배경색 */ color:#c2410c; /* 수정: 보조 버튼 텍스트 색상 */}
     .btn.ghost{background:#ffffffd9}
     .share-menu-wrap{position:relative}
     .share-menu{
@@ -59,12 +64,12 @@
       max-width:100%;
     }
     .share-menu button{display:block; width:100%; text-align:left; border-radius:10px; border:0; padding:10px 12px; background:#fff; cursor:pointer}
-    .share-menu button:hover{background:#f1f5f9}
+    .share-menu button:hover{background:#fefce8; /* 수정: 공유 메뉴 호버 색상 */}
     .controls{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .controls label{font-weight:700}
     select{border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;background:#fff;font-weight:600;max-width:100%}
     .actions{margin-top:8px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-    .btn.control{border:1px solid #cbd5e1;background:#fff;color:#075985;border-radius:10px;width:100%}
+    .btn.control{border:1px solid #cbd5e1;background:#fff;color:#c2410c; /* 수정: 컨트롤 버튼 텍스트 색상 */ border-radius:10px;width:100%}
     .wrap{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
     .board-card,.info-card{background:var(--card);border-radius:var(--radius);padding:12px;box-shadow:0 2px 10px rgba(2,6,23,.06)}
     .board{
@@ -73,10 +78,10 @@
       border-radius:10px;display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);overflow:hidden;background:#fff
     }
     .cell{border:1px solid #cbd5e1;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;user-select:none;}
-    .cell.given{background:#f1f5f9;color:#0f172a}
+    .cell.given{background:#fef2e8; /* 수정: 초기 숫자 칸 배경색 */ color:var(--ink)}
     .cell.editable{cursor:pointer}
     .cell.selected{outline:3px solid var(--focus);z-index:2;position:relative}
-    .cell.same{background:#eaf6ff}
+    .cell.same{background:#ffeacb; /* 수정: 같은 숫자 칸 배경색 */}
     .cell.error{background:var(--error)}
     .cell.marked{background:#fef9c3}
     .cell[data-r="0"],.cell[data-r="3"],.cell[data-r="6"]{border-top:3px solid var(--grid)}
@@ -88,16 +93,14 @@
     .pad .erase{grid-column:span 2}
     .pad button:active{transform:translateY(1px)}
     .info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-    .tile{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center}
+    .tile{background:#fff7ed; /* 수정: 정보 타일 배경색 */ border:1px solid #fed7aa; /* 수정: 정보 타일 보더색 */ padding:10px;text-align:center}
     .tile .k{color:var(--muted);font-size:.9rem}
     .tile .v{font-size:1.15rem;font-weight:900;margin-top:6px}
     
-    /* ========= 스타일 수정됨 ========= */
     .memo-pad{max-width:520px; margin:0 auto 8px; padding:0 10px 10px; display:grid; grid-template-columns:repeat(9, 1fr); gap:8px;}
     .memo-pad button{border:0; background:#fff; border-radius:10px; padding:10px 0; font-weight:700; cursor:pointer; box-shadow:0 1px 0 rgba(0,0,0,.06);}
     .memo-pad button.selected{background:var(--brand); color:#fff;}
     .pad-label {text-align:center; font-size:0.9rem; font-weight:600; color:var(--muted); padding:16px 0 8px;}
-    /* ========= 스타일 끝 ========= */
 
     @media (max-width:600px){
       html{font-size:18px}
@@ -149,8 +152,7 @@
         <option value="normal" selected>보통</option>
         <option value="hard">어려움</option>
       </select>
-      <strong id="info-diff" style="margin-left:4px;color:#0f172a">보통</strong>
-    </section>
+      <strong id="info-diff" style="margin-left:4px;color:var(--ink)">보통</strong> </section>
 
     <section class="actions">
       <button class="btn control" id="btn-new">새 퍼즐</button>
@@ -242,7 +244,7 @@
       }
     }
 
-    // ========= renderBoard 함수 수정됨 =========
+    // renderBoard 함수 (메모 표시는 제거)
     function renderBoard(){
       let empty=0;
       [...boardEl.children].forEach(cell=>{
@@ -263,7 +265,6 @@
       document.getElementById('info-empty').textContent=empty;
       document.getElementById('info-errors').textContent=mistakes;
     }
-    // ========= 수정 끝 =========
 
     function selectCell(r,c){ 
         selected={r,c};
@@ -328,7 +329,6 @@
         } else {
             memos[r][c].add(n);
         }
-        // 수정: renderBoard() 호출 제거 (보드에 변화가 없으므로)
         renderMemoPad();
     }
 
