@@ -72,7 +72,7 @@
       aspect-ratio:1;margin:8px auto;border:3px solid var(--grid);
       border-radius:10px;display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);overflow:hidden;background:#fff
     }
-    .cell{border:1px solid #cbd5e1;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;user-select:none; position:relative;}
+    .cell{border:1px solid #cbd5e1;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;user-select:none;}
     .cell.given{background:#f1f5f9;color:#0f172a}
     .cell.editable{cursor:pointer}
     .cell.selected{outline:3px solid var(--focus);z-index:2;position:relative}
@@ -92,11 +92,7 @@
     .tile .k{color:var(--muted);font-size:.9rem}
     .tile .v{font-size:1.15rem;font-weight:900;margin-top:6px}
     
-    /* ========= 새로 추가/수정된 스타일 ========= */
-    .memo-grid{display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:repeat(3, 1fr); width:100%; height:100%; align-items:center; justify-items:center; font-size:0.65rem; color:#b0bec5; font-weight:600; position:absolute; top:0; left:0;}
-    .main-number{width:100%; height:100%; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; background:transparent;}
-    .cell.given .main-number, .cell.given{color:var(--ink);}
-    .cell .main-number{font-size:1.2rem; font-weight:800;}
+    /* ========= 스타일 수정됨 ========= */
     .memo-pad{max-width:520px; margin:0 auto 8px; padding:0 10px 10px; display:grid; grid-template-columns:repeat(9, 1fr); gap:8px;}
     .memo-pad button{border:0; background:#fff; border-radius:10px; padding:10px 0; font-weight:700; cursor:pointer; box-shadow:0 1px 0 rgba(0,0,0,.06);}
     .memo-pad button.selected{background:var(--brand); color:#fff;}
@@ -175,7 +171,7 @@
 
         <div class="pad-label">정답입력 키패드</div>
         <div id="pad" class="pad" aria-label="숫자 패드"></div>
-        </div>
+      </div>
 
       <ins class="adsbygoogle"
            style="display:block; text-align:center; margin:8px auto; max-width:520px"
@@ -246,31 +242,17 @@
       }
     }
 
+    // ========= renderBoard 함수 수정됨 =========
     function renderBoard(){
       let empty=0;
       [...boardEl.children].forEach(cell=>{
         const r=+cell.dataset.r,c=+cell.dataset.c,v=state[r][c];
-        cell.innerHTML='';
+        
+        // 셀의 숫자 내용을 간단하게 표시
+        cell.textContent = v ? v : '';
+        
+        // 클래스 목록 관리
         cell.classList.remove('given','editable','selected','same','error','marked');
-        
-        if (memos[r][c].size > 0) {
-            const memoGrid = document.createElement('div');
-            memoGrid.className = 'memo-grid';
-            for (let i = 1; i <= 9; i++) {
-                const memoDigit = document.createElement('div');
-                memoDigit.textContent = memos[r][c].has(i) ? i : '';
-                memoGrid.appendChild(memoDigit);
-            }
-            cell.appendChild(memoGrid);
-        }
-        
-        if (v) {
-            const mainNumEl = document.createElement('div');
-            mainNumEl.className = 'main-number';
-            mainNumEl.textContent = v;
-            cell.appendChild(mainNumEl);
-        }
-        
         if(given[r][c]){ cell.classList.add('given'); cell.setAttribute('tabindex','-1'); }
         else { cell.classList.add('editable'); cell.setAttribute('tabindex','0'); }
         if(marked[r][c]) cell.classList.add('marked');
@@ -281,6 +263,8 @@
       document.getElementById('info-empty').textContent=empty;
       document.getElementById('info-errors').textContent=mistakes;
     }
+    // ========= 수정 끝 =========
+
     function selectCell(r,c){ 
         selected={r,c};
         renderBoard(); 
@@ -289,7 +273,7 @@
 
     /* ========= 숫자패드 & 메모패드 ========= */
     const padEl=document.getElementById('pad');
-    const memoPadAreaEl = document.getElementById('memo-pad-area'); // 수정
+    const memoPadAreaEl = document.getElementById('memo-pad-area');
     const memoPadEl = document.getElementById('memo-pad');
 
     function buildPad(){
@@ -321,10 +305,10 @@
     function renderMemoPad() {
         const { r, c } = selected;
         if (r === null || c === null || given[r][c]) {
-            memoPadAreaEl.style.display = 'none'; // 수정
+            memoPadAreaEl.style.display = 'none';
             return;
         }
-        memoPadAreaEl.style.display = 'block'; // 수정
+        memoPadAreaEl.style.display = 'block';
         const currentMemos = memos[r][c];
         [...memoPadEl.children].forEach((btn, i) => {
             const n = i + 1;
@@ -344,7 +328,7 @@
         } else {
             memos[r][c].add(n);
         }
-        renderBoard();
+        // 수정: renderBoard() 호출 제거 (보드에 변화가 없으므로)
         renderMemoPad();
     }
 
