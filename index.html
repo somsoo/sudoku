@@ -91,6 +91,14 @@
     .tile{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center}
     .tile .k{color:var(--muted);font-size:.9rem}
     .tile .v{font-size:1.15rem;font-weight:900;margin-top:6px}
+    
+    /* ========= 새로 추가된 스타일 ========= */
+    .memo-grid{display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:repeat(3, 1fr); width:100%; height:100%; align-items:center; justify-items:center; font-size:0.7rem; color:var(--muted); font-weight:600;}
+    .memo-pad{max-width:520px; margin:16px auto 8px; padding:10px; border-radius:14px; background:#f1f5f9; display:grid; grid-template-columns:repeat(9, 1fr); gap:8px;}
+    .memo-pad button{border:0; background:#fff; border-radius:10px; padding:10px 0; font-weight:700; cursor:pointer; box-shadow:0 1px 0 rgba(0,0,0,.06);}
+    .memo-pad button.selected{background:var(--brand); color:#fff;}
+    /* ========= 새로 추가된 스타일 끝 ========= */
+
     @media (max-width:600px){
       html{font-size:18px}
       .header h1{font-size:1.35rem}
@@ -103,6 +111,8 @@
     }
     @media (max-width:480px){
       .pad{gap:8px}
+      .memo-pad{gap:6px} /* 새로 추가 */
+      .memo-pad button{font-size:1rem; padding:12px 0;} /* 새로 추가 */
     }
   </style>
 </head>
@@ -153,6 +163,7 @@
     <div class="wrap">
       <div class="board-card">
         <div id="board" class="board" aria-label="스도쿠 보드" role="grid"></div>
+        <div id="memo-pad" class="memo-pad" aria-label="후보 숫자 메모" style="display:none;"></div>
         <div id="pad" class="pad" aria-label="숫자 패드"></div>
       </div>
 
@@ -203,6 +214,7 @@
     let state=[...Array(9)].map(()=>Array(9).fill(0));
     let given=[...Array(9)].map(()=>Array(9).fill(false));
     let marked=[...Array(9)].map(()=>Array(9).fill(false));
+    let memos = [...Array(9)].map(() => [...Array(9)].map(() => new Set())); // 새로 추가: 후보 숫자 메모 저장
     let selected={r:null,c:null};
     let timer=0,timerId=null,mistakes=0;
     let revealed=false;
@@ -227,8 +239,20 @@
       let empty=0;
       [...boardEl.children].forEach(cell=>{
         const r=+cell.dataset.r,c=+cell.dataset.c,v=state[r][c];
-        cell.textContent=v? v:'';
+        cell.innerHTML=''; // textContent에서 innerHTML로 변경
         cell.classList.remove('given','editable','selected','same','error','marked');
+        if (v) { // 숫자가 있는 경우
+            cell.textContent = v;
+        } else if (memos[r][c].size > 0) { // 숫자가 없고 메모가 있는 경우
+            const memoGrid = document.createElement('div');
+            memoGrid.className = 'memo-grid';
+            for (let i = 1; i <= 9; i++) {
+                const memoDigit = document.createElement('div');
+                memoDigit.textContent = memos[r][c].has(i) ? i : '';
+                memoGrid.appendChild(memoDigit);
+            }
+            cell.appendChild(memoGrid);
+        }
         if(given[r][c]){ cell.classList.add('given'); cell.setAttribute('tabindex','-1'); }
         else { cell.classList.add('editable'); cell.setAttribute('tabindex','0'); }
         if(marked[r][c]) cell.classList.add('marked');
@@ -239,10 +263,22 @@
       document.getElementById('info-empty').textContent=empty;
       document.getElementById('info-errors').textContent=mistakes;
     }
-    function selectCell(r,c){ if(given[r][c]) return; selected={r,c}; renderBoard(); }
+    function selectCell(r,c){ 
+        if(given[r][c]) {
+            selected={r,c};
+            renderBoard(); 
+            renderMemoPad(); // 새로 추가
+            return;
+        }
+        selected={r,c}; 
+        renderBoard(); 
+        renderMemoPad(); // 새로 추가
+    }
 
-    /* ========= 숫자패드 ========= */
+    /* ========= 숫자패드 & 메모패드 ========= */ // 제목 수정
     const padEl=document.getElementById('pad');
+    const memoPadEl = document.getElementById('memo-pad'); // 새로 추가
+
     function buildPad(){
       padEl.innerHTML='';
       for(let n=1;n<=9;n++){
@@ -254,8 +290,53 @@
     }
     function place(n){
       const {r,c}=selected; if(r===null||given[r][c]) return;
-      state[r][c]=n||0; renderBoard(); checkWin();
+      state[r][c]=n||0;
+      memos[r][c].clear(); // 숫자 입력 시 메모 초기화 (새로 추가)
+      renderBoard();
+      renderMemoPad(); // 새로 추가
+      checkWin();
     }
+    
+    // ========= 이하 새로 추가된 함수 =========
+    function buildMemoPad() {
+        memoPadEl.innerHTML = '';
+        for (let n = 1; n <= 9; n++) {
+            const b = document.createElement('button');
+            b.textContent = n;
+            b.addEventListener('click', () => toggleMemo(n));
+            memoPadEl.appendChild(b);
+        }
+    }
+    function renderMemoPad() {
+        const { r, c } = selected;
+        if (r === null || c === null || given[r][c] || state[r][c] !== 0) {
+            memoPadEl.style.display = 'none';
+            return;
+        }
+        memoPadEl.style.display = 'grid';
+        const currentMemos = memos[r][c];
+        [...memoPadEl.children].forEach((btn, i) => {
+            const n = i + 1;
+            if (currentMemos.has(n)) {
+                btn.classList.add('selected');
+            } else {
+                btn.classList.remove('selected');
+            }
+        });
+    }
+    function toggleMemo(n) {
+        const { r, c } = selected;
+        if (r === null || c === null || given[r][c]) return;
+        
+        if (memos[r][c].has(n)) {
+            memos[r][c].delete(n);
+        } else {
+            memos[r][c].add(n);
+        }
+        renderBoard();
+        renderMemoPad();
+    }
+    // ========= 새로 추가된 함수 끝 =========
 
     /* ========= 타이머 ========= */
     function startTimer(){ stopTimer(); timer=0;
@@ -474,12 +555,16 @@
       const full=generateFull(); const puz=makePuzzle(full,diff);
       solution=full; puzzle=puz; state=deepCopy(puz);
       marked=[...Array(9)].map(()=>Array(9).fill(false));
+      memos = [...Array(9)].map(() => [...Array(9)].map(() => new Set())); // 새로 추가
       given=[...Array(9)].map(()=>Array(9).fill(false));
       for(let r=0;r<9;r++)for(let c=0;c<9;c++) given[r][c]=puzzle[r][c]!==0;
       selected={r:null,c:null}; mistakes=0; document.getElementById('info-state').textContent='진행 중';
       finalClearTime = null; finalDifficulty = null;
       document.getElementById('result-share-area').style.display = 'none';
-      startTimer(); renderBoard(); history.replaceState({},'',makeShareURL());
+      startTimer(); 
+      renderBoard(); 
+      renderMemoPad(); // 새로 추가
+      history.replaceState({},'',makeShareURL());
       try{ (adsbygoogle = window.adsbygoogle || []).push({}); }catch(_){}
     }
 
@@ -497,8 +582,10 @@
     document.getElementById('btn-solve').addEventListener('click',()=>{
       revealed = true;
       state = deepCopy(solution);
+      memos = [...Array(9)].map(() => [...Array(9)].map(() => new Set())); // 새로 추가
       for(let r=0;r<9;r++) for(let c=0;c<9;c++) given[r][c]=true;
       renderBoard();
+      renderMemoPad(); // 새로 추가
       highlightErrors();
       stopTimer();
       document.getElementById('info-state').textContent='해답 표시됨';
@@ -512,10 +599,13 @@
     document.getElementById('btn-reset').addEventListener('click',()=>{
       revealed = false;
       marked=[...Array(9)].map(()=>Array(9).fill(false));
+      memos = [...Array(9)].map(() => [...Array(9)].map(() => new Set())); // 새로 추가
       state=deepCopy(puzzle); mistakes=0;
       finalClearTime = null; finalDifficulty = null;
       document.getElementById('result-share-area').style.display = 'none';
-      renderBoard(); highlightErrors();
+      renderBoard();
+      renderMemoPad(); // 새로 추가
+      highlightErrors();
       document.getElementById('info-state').textContent='진행 중';
     });
     document.getElementById('btn-copy').addEventListener('click',async()=>{
@@ -527,6 +617,7 @@
 
     /* ========= 초기 구동 ========= */
     buildBoard(); buildPad();
+    buildMemoPad(); // 새로 추가
     if(!loadFromShare(location.href)){ newGame('normal'); }
     else{
       revealed=false;
@@ -548,7 +639,7 @@
         const dc=e.key==='ArrowLeft'?-1:e.key==='ArrowRight'?1:0;
         let r=selected.r,c=selected.c;
         do{ r=(r+dr+9)%9; c=(c+dc+9)%9; }while(given[r][c] && (r!==selected.r || c!==selected.c));
-        if(!given[r][c]) selectCell(r,c);
+        selectCell(r,c);
       }
     });
   </script>
